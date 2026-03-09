@@ -1,0 +1,99 @@
+@extends('layouts.app')
+
+@section('css')
+<link rel="stylesheet" href="{{ asset('css/items/index.css') }}">
+@endsection
+
+
+@section('content')
+
+<div class="items">
+
+    {{-- ===============================
+        タブ
+    =============================== --}}
+    <nav class="items__tabs">
+
+        <a
+            href="{{ route('items.index', ['keyword' => $keyword]) }}"
+            class="items__tab {{ request('tab') !== 'mylist' ? 'items__tab--active' : '' }}"
+        >
+            おすすめ
+        </a>
+
+        <a
+            href="{{ route('items.index', ['tab' => 'mylist','keyword' => $keyword]) }}"
+            class="items__tab {{ request('tab') === 'mylist' ? 'items__tab--active' : '' }}"
+        >
+            マイリスト
+        </a>
+
+    </nav>
+
+
+    {{-- ===============================
+        商品一覧
+    =============================== --}}
+    <div class="items__grid">
+
+        @forelse ($items as $item)
+
+            @php
+                $image = $item->firstImage;
+            @endphp
+
+            <div class="item-card">
+
+                <a
+                    href="{{ route('items.show', $item) }}"
+                    class="item-card__link"
+                >
+
+                    {{-- 商品画像 --}}
+                    <div class="item-card__image-wrapper">
+
+                        @if ($image)
+                            <img
+                                src="{{ asset('storage/' . $image->image_path) }}"
+                                class="item-card__image"
+                                alt="{{ $item->name }}"
+                            >
+                        @else
+                            <div class="item-card__image item-card__image--dummy">
+                                商品画像
+                            </div>
+                        @endif
+
+
+                        {{-- Sold表示 --}}
+                        @if($item->purchase)
+                            <div class="item-card__sold">
+                                Sold
+                            </div>
+                        @endif
+
+                    </div>
+
+
+                    {{-- 商品名 --}}
+                    <div class="item-card__name">
+                        {{ $item->name }}
+                    </div>
+
+                </a>
+
+            </div>
+
+        @empty
+
+            <p class="items__empty">
+                商品が見つかりませんでした
+            </p>
+
+        @endforelse
+
+    </div>
+
+</div>
+
+@endsection

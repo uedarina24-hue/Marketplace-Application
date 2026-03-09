@@ -1,0 +1,218 @@
+/*
+=====================================
+購入画面 全体
+=====================================
+*/
+.purchase {
+    max-width: 1540px;
+    margin: 0 auto;
+    padding: 40px 60px;
+}
+
+.purchase__container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 80px;
+}
+
+
+/*
+=====================================
+左カラム
+=====================================
+*/
+.purchase__main {
+    width: 600px;
+}
+
+.purchase__item {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.purchase__item-image {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    background: #ddd;
+}
+
+.purchase__item-name {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.purchase__item-price {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+
+.purchase__divider {
+    margin: 20px 0;
+    border: none;
+    border-top: 3px solid #ddd;
+}
+
+
+/*
+=====================================
+フォーム共通幅を統一
+=====================================
+*/
+.purchase__section {
+    margin: 10px 0 30px;
+}
+
+/* ラベル */
+.purchase__label,
+.purchase__address-title {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+/* 入力エリア共通幅 */
+.purchase__address-text {
+    width: 100%;
+    max-width: 400px;
+    margin-left: 20px;
+}
+
+.purchase__select {
+    width: 280px;
+    padding: 10px 14px;
+    margin-left: 20px;
+}
+
+
+/*
+=====================================
+支払い方法
+=====================================
+*/
+.purchase__select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+
+/*
+=====================================
+配送先
+=====================================
+*/
+.purchase__address-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.purchase__address-text {
+    margin-top: 5px;
+    line-height: 1.6;
+}
+
+.purchase__address-edit {
+    text-decoration: none;
+    margin-right: 16px;
+}
+
+.purchase__address-edit:hover {
+    text-decoration: none;
+}
+
+/*
+=====================================
+配送先下ボーダー
+=====================================
+*/
+.purchase__section--border {
+    padding-bottom: 20px;
+    border-bottom: 3px solid #ddd;
+}
+
+
+
+/*
+=====================================
+右カラム
+=====================================
+*/
+.purchase__sidebar {
+    width: 320px;
+    flex-shrink: 0;
+}
+
+
+/*
+=====================================
+サマリーBOX
+=====================================
+*/
+.purchase__summary {
+    border: 3px solid #ccc;
+    margin-bottom: 20px;
+    background: #fff;
+}
+
+/* 各行 */
+.purchase__summary-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 18px 20px;
+    border-bottom: 3px solid #ccc;
+    font-size: 16px;
+}
+
+.purchase__summary-row:last-child {
+    border-bottom: none;
+}
+
+.purchase__summary-price {
+    font-weight: bold;
+}
+
+/*
+=====================================
+購入ボタン
+=====================================
+*/
+.purchase__submit {
+    width: 100%;
+    padding: 14px;
+
+    background: #ff5a5a;
+    color: #fff;
+
+    border: none;
+    border-radius: 4px;
+
+    font-weight: bold;
+    cursor: pointer;
+
+    transition: background 0.2s;
+}
+
+.purchase__submit:hover {
+    background: #e04848;
+}
+
+.purchase__submit:hover {
+    background: #e04848;
+}
+
+/* =========================
+エラー
+========================= */
+.form-error {
+    color: red;
+    font-size: 13px;
+
+    margin-top: 5px;
+}

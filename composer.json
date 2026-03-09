@@ -1,0 +1,6 @@
+{
+    "require": {
+        "stripe/stripe-php": "^19.4",
+        "intervention/image": "^3.11"
+    }
+}

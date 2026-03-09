@@ -1,0 +1,218 @@
+/* ===============================
+全体
+=============================== */
+.mypage {
+    max-width: 1540px;
+    margin: 0 auto;
+    padding: 24px;
+}
+
+
+/* ===============================
+プロフィール
+=============================== */
+.mypage__profile {
+    position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+}
+
+
+.mypage__profile-left {
+    display: flex;
+    align-items: center;
+    gap: 80px;
+    transform: translateX(120px);
+}
+
+.mypage__profile-right {
+    position: absolute;
+    right: 120px;
+}
+
+/* プロフィール画像 */
+.mypage__profile-image {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #ddd;
+}
+
+
+/* プレースホルダー */
+.mypage__profile-image--placeholder {
+    background: #ddd;
+}
+
+
+/* 名前 */
+.mypage__profile-name {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+
+/* ===============================
+編集ボタン
+=============================== */
+.mypage__edit-button {
+    padding: 10px 20px;
+    border: 2px solid #ff5a5f;
+    border-radius: 8px;
+    color: #ff5a5f;
+    text-decoration: none;
+    font-weight: bold;
+    transition: 0.2s;
+}
+
+
+.mypage__edit-button:hover {
+    background: #ff5a5f;
+    color: white;
+}
+
+
+
+/* ===============================
+タブ
+=============================== */
+.mypage__tabs {
+    display: flex;
+    gap: 40px;
+    border-bottom: 2px solid #ddd;
+    padding-left: 32px;
+    margin-top: 40px;
+    margin-bottom: 30px;
+}
+
+
+/* タブ */
+.mypage__tab {
+    padding: 10px 0;
+    text-decoration: none;
+    color: #555;
+    font-weight: bold;
+}
+
+
+/* アクティブ */
+.mypage__tab--active {
+    color: red;
+    border-bottom: 3px solid red;
+}
+
+
+
+/* ===============================
+商品一覧
+=============================== */
+
+.mypage__items {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+}
+
+
+
+/* ===============================
+商品カード
+=============================== */
+
+.mypage__item-card {
+    text-decoration: none;
+    color: black;
+}
+
+
+/* 画像ラッパー */
+.mypage__item-image-wrapper {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    border-radius: 8px;
+    background: #eee;
+}
+
+
+/* 画像 */
+.mypage__item-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+
+/* プレースホルダー */
+.mypage__item-image--placeholder {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    background: #ddd;
+}
+
+
+
+/* 商品名 */
+.mypage__item-name {
+    margin-top: 8px;
+    font-size: 16px;
+}
+
+
+
+/* ===============================
+商品なし
+=============================== */
+
+.mypage__empty {
+    font-size: 18px;
+    color: #888;
+}
+
+
+
+/* ===============================
+レスポンシブ
+=============================== */
+
+
+/* 1400px以下 */
+@media (max-width: 1400px) {
+    .mypage__items {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+}
+
+
+/* タブレット */
+@media (max-width: 900px) {
+    .mypage__items {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+
+/* スマホ */
+@media (max-width: 600px) {
+    .mypage {
+        padding: 20px;
+    }
+
+    .mypage__profile {
+        flex-direction: column;
+        gap: 20px;
+        align-items: flex-start;
+    }
+
+    .mypage__items {
+        grid-template-columns: repeat(1, 1fr);
+    }
+
+}

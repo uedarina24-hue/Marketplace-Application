@@ -1,0 +1,131 @@
+/* ===============================
+コンテナ
+================================= */
+
+.items {
+    max-width: 1540px;
+    margin: 0 auto;
+    padding: 24px;
+}
+
+
+/* ===============================
+タブ
+================================= */
+
+.items__tabs {
+    display: flex;
+    gap: 24px;
+    border-bottom: 2px solid #ccc;
+    margin-bottom: 30px;
+    padding-left: 32px;
+}
+
+.items__tab {
+    padding: 10px 0;
+    text-decoration: none;
+    color: #555;
+    font-weight: bold;
+}
+
+.items__tab--active {
+    color: red;
+    border-bottom: 3px solid red;
+}
+
+
+/* ===============================
+グリッド
+================================= */
+
+.items__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+}
+
+
+/* ===============================
+カード
+================================= */
+
+.item-card {
+    text-decoration: none;
+    color: #333;
+}
+
+.item-card__image-wrapper {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background-color: #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 8px;
+    position: relative;
+}
+
+.item-card__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+/* Sold */
+.item-card__sold {
+    position: absolute;
+        inset: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: rgba(0, 0, 0, 0.5);
+        color: white;
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+        font-size: 28px;
+        font-weight: bold;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+}
+
+/* 商品名 */
+.item-card__name {
+    font-size: 14px;
+}
+
+/* ===============================
+レスポンシブ
+=============================== */
+
+/* 1400px以下 */
+@media (max-width: 1400px) {
+
+    .items__grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+}
+
+
+/* タブレット */
+@media (max-width: 900px) {
+
+    .items__grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+
+/* スマホ */
+@media (max-width: 600px) {
+
+    .items {
+        padding: 20px;
+    }
+
+    .items__grid {
+        grid-template-columns: repeat(1, 1fr);
+    }
+
+}
