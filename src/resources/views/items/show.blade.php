@@ -10,9 +10,7 @@
 
     <div class="item-detail__container">
 
-        {{-- ===============================
-            商品画像
-        =============================== --}}
+        {{-- 商品画像 --}}
         <div class="item-detail__image-area">
 
             @if($item->firstImage)
@@ -73,15 +71,20 @@
                 <form method="POST" action="{{ route('likes.toggle', $item) }}">
                     @csrf
 
-                    <button type="submit" class="item-detail__like-button"
+                    <button type="submit" class="item-detail__like-button" aria-label="いいね"
                         @if($item->is_sold) disabled @endif>
 
                         @if(auth()->check() && $item->isLikedBy(auth()->user()))
-                            <img src="{{ asset('images/heart_pink.png') }}"
-                                class="item-detail__like-icon">
+                            <img
+                            src="{{ asset('images/heart_pink.png') }}"
+                            class="item-detail__like-icon"
+                            alt="いいね"
+                            >
                         @else
                             <img src="{{ asset('images/heart_default.png') }}"
-                                class="item-detail__like-icon">
+                                class="item-detail__like-icon"
+                                alt="いいね"
+                            >
                         @endif
 
                         <span>
@@ -99,6 +102,7 @@
                     <img
                         src="{{ asset('images/speech_bubble.png') }}"
                         class="item-detail__comment-icon"
+                        alt="コメント"
                     >
 
                     <span>
@@ -226,7 +230,7 @@
                                             class="item-detail__comment-user-image"
                                         >
                                     @else
-                                        <div class="item-detail__comment-user-placeholder"><div>
+                                    <div class="item-detail__comment-user-placeholder"></div>
                                     @endif
 
                                 </div>
@@ -272,11 +276,12 @@
                 >
                     @csrf
 
-                    <label class="item-detail__comment-label">
+                    <label for="content" class="item-detail__comment-label">
                         商品へのコメント
                     </label>
 
                     <textarea
+                        id="content"
                         name="content"
                         class="item-detail__comment-input"
                         maxlength="255"
@@ -284,12 +289,12 @@
                             placeholder="ログイン後にコメントできます"
                             readonly
                         @endguest
-                    ></textarea>
+                    >{{ old('content') }}</textarea>
 
                     @error('content')
-                        <div class="item-detail__error">
-                            {{ $message }}
-                        </div>
+                    <p class="item-detail__error">
+                        {{ $message }}
+                    </p>
                     @enderror
 
                     <button

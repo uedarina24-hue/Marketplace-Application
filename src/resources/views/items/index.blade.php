@@ -4,16 +4,14 @@
 <link rel="stylesheet" href="{{ asset('css/items/index.css') }}">
 @endsection
 
-
 @section('content')
 
 <div class="items">
 
-    {{-- ===============================
-        タブ
-    =============================== --}}
-    <nav class="items__tabs">
+    <h1 class="visually-hidden">商品一覧</h1>
 
+    {{-- タブ --}}
+    <nav class="items__tabs">
         <a
             href="{{ route('items.index', ['keyword' => $keyword]) }}"
             class="items__tab {{ request('tab') !== 'mylist' ? 'items__tab--active' : '' }}"
@@ -22,34 +20,23 @@
         </a>
 
         <a
-            href="{{ route('items.index', ['tab' => 'mylist','keyword' => $keyword]) }}"
+            href="{{ route('items.index', ['tab' => 'mylist', 'keyword' => $keyword]) }}"
             class="items__tab {{ request('tab') === 'mylist' ? 'items__tab--active' : '' }}"
         >
             マイリスト
         </a>
-
     </nav>
 
-
-    {{-- ===============================
-        商品一覧
-    =============================== --}}
-    <div class="items__grid">
-
+    {{-- 商品一覧 --}}
+    <ul class="items__grid">
         @forelse ($items as $item)
+            @php($image = $item->firstImage)
 
-            @php
-                $image = $item->firstImage;
-            @endphp
-
-            <div class="item-card">
-
+            <li class="item-card">
                 <a
                     href="{{ route('items.show', $item) }}"
                     class="item-card__link"
                 >
-
-                    {{-- 商品画像 --}}
                     <div class="item-card__image-wrapper">
 
                         @if ($image)
@@ -64,8 +51,6 @@
                             </div>
                         @endif
 
-
-                        {{-- Sold表示 --}}
                         @if($item->purchase)
                             <div class="item-card__sold">
                                 Sold
@@ -74,26 +59,19 @@
 
                     </div>
 
-
-                    {{-- 商品名 --}}
                     <div class="item-card__name">
                         {{ $item->name }}
                     </div>
 
                 </a>
-
-            </div>
+            </li>
 
         @empty
-
-            <p class="items__empty">
+            <li class="items__empty">
                 商品が見つかりませんでした
-            </p>
-
+            </li>
         @endforelse
-
-    </div>
+    </ul>
 
 </div>
-
 @endsection

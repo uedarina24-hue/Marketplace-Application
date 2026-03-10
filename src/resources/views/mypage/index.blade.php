@@ -8,18 +8,16 @@
 
 <div class="mypage">
 
-    <!-- =========================
-    プロフィール上部
-    ========================== -->
+    {{-- プロフィール --}}
     <div class="mypage__profile">
 
-        <!-- プロフィール画像 -->
         <div class="mypage__profile-left">
 
             @if(Auth::user()->profile_image)
                 <img
                     src="{{ asset('storage/' . Auth::user()->profile_image) }}"
                     class="mypage__profile-image"
+                    alt="{{ Auth::user()->name }}"
                 >
             @else
                 <div class="mypage__profile-image mypage__profile-image--placeholder"></div>
@@ -31,8 +29,7 @@
 
         </div>
 
-
-        <!-- 編集ボタン -->
+        {{-- 編集ボタン --}}
         <div class="mypage__profile-right">
 
             <a
@@ -46,11 +43,7 @@
 
     </div>
 
-
-    <!-- =========================
-    タブ
-    ========================== -->
-
+    {{-- タブ --}}
     <nav class="mypage__tabs">
 
         <a
@@ -69,12 +62,7 @@
 
     </nav>
 
-
-
-    <!-- =========================
-    商品一覧
-    ========================== -->
-
+    {{-- 商品一覧 --}}
     <div class="mypage__items">
 
         @forelse($items as $item)
@@ -84,13 +72,13 @@
                 class="mypage__item-card"
             >
 
-                <!-- 画像 -->
                 <div class="mypage__item-image-wrapper">
 
-                    @if($item->images->first())
+                    @if($item->firstImage)
                         <img
-                            src="{{ asset('storage/' . $item->images->first()->image_path) }}"
+                            src="{{ asset('storage/' . $item->firstImage->image_path) }}"
                             class="mypage__item-image"
+                            alt="{{ $item->name }}"
                         >
                     @else
                         <div class="mypage__item-image mypage__item-image--placeholder">
@@ -100,8 +88,6 @@
 
                 </div>
 
-
-                <!-- 商品名 -->
                 <div class="mypage__item-name">
                     {{ $item->name }}
                 </div>
@@ -110,9 +96,9 @@
 
         @empty
 
-            <div class="mypage__empty">
+            <p class="mypage__empty">
                 商品がありません
-            </div>
+            </p>
 
         @endforelse
 

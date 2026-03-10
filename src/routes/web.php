@@ -50,7 +50,7 @@ Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $requ
 
 /*
 |--------------------------------------------------------------------------
-| 未ログインでも閲覧可能
+| 商品一覧・詳細（ログイン不要）
 |--------------------------------------------------------------------------
 */
 
@@ -64,7 +64,7 @@ Route::get('/item/{item}', [MarketplaceController::class,'show'])
 
 /*
 |--------------------------------------------------------------------------
-| ログイン必須
+| コメント、いいね、出品（認証必須）
 |--------------------------------------------------------------------------
 */
 
@@ -91,7 +91,7 @@ Route::middleware('auth')->group(function () {
 
 /*
 |--------------------------------------------------------------------------
-| メール認証済みユーザー
+| マイページ、購入、住所変更、stripe決済（認証・メール認証必須）
 |--------------------------------------------------------------------------
 */
 
@@ -101,8 +101,8 @@ Route::middleware(['auth','verified'])->group(function () {
     Route::get('/mypage', [MarketplaceController::class,'mypage'])
         ->name('mypage');
 
-    Route::get('/mypage/profile', [MarketplaceController::class,'edit'])
-        ->name('mypage.profile');
+    Route::get('/mypage/profile/edit', [MarketplaceController::class, 'edit'])
+        ->name('mypage.profile.edit');
 
     Route::put('/mypage/profile', [MarketplaceController::class,'update'])
         ->name('mypage.profile.update');

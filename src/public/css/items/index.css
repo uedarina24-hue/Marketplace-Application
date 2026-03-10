@@ -12,6 +12,13 @@
 /* ===============================
 タブ
 ================================= */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+}
 
 .items__tabs {
     display: flex;
@@ -39,6 +46,10 @@
 ================================= */
 
 .items__grid {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 32px;

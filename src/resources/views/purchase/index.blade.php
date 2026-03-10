@@ -14,7 +14,7 @@
         </div>
     @endif
 
-        <!-- 左カラム -->
+        {{-- 左カラム --}}
         <div class="purchase__main">
 
             <div class="purchase__item">
@@ -26,7 +26,7 @@
                 @endif
 
                 <div class="purchase__item-info">
-                    <h2 class="purchase__item-name">{{ $item->name }}</h2>
+                    <h1 class="purchase__item-name">{{ $item->name }}</h1>
                     <p class="purchase__item-price">¥{{ number_format($item->price) }}</p>
                 </div>
             </div>
@@ -38,9 +38,9 @@
                 class="purchase__form">
                 @csrf
 
-                <!-- 支払い方法 -->
+                {{-- 支払い方法 --}}
                 <div class="purchase__section">
-                    <label class="purchase__label">支払い方法</label>
+                    <label for="payment_method" class="purchase__label">支払い方法</label>
 
                     <select name="payment_method" id="payment_method" class="purchase__select">
                         <option value="" disabled {{ old('payment_method') ? '' : 'selected' }}>
@@ -61,10 +61,10 @@
 
                 <hr class="purchase__divider">
 
-                <!-- 配送先 -->
+                {{-- 配送先 --}}
                 <div class="purchase__section purchase__section--border">
                     <div class="purchase__address-header">
-                        <h4 class="purchase__address-title">配送先</h4>
+                        <h2 class="purchase__address-title">配送先</h2>
                         <a href="{{ route('purchase.address.edit', $item) }}"
                         class="purchase__address-edit">変更する</a>
                     </div>
@@ -79,7 +79,7 @@
 
         </div>
 
-        <!-- 右カラム -->
+        {{-- 右カラム --}}
         <div class="purchase__sidebar">
 
             <div class="purchase__summary">
@@ -103,9 +103,11 @@
 </div>
 
 <script>
-document.getElementById('payment_method').addEventListener('change', function() {
-    document.getElementById('method_label').innerText =
-        this.options[this.selectedIndex].text;
+const paymentSelect = document.getElementById('payment_method');
+const methodLabel = document.getElementById('method_label');
+methodLabel.innerText = paymentSelect.options[paymentSelect.selectedIndex].text;
+paymentSelect.addEventListener('change', function() {
+    methodLabel.innerText = this.options[this.selectedIndex].text;
 });
 
 </script>

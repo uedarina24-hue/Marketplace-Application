@@ -12,12 +12,13 @@
     <form action="{{ route('mypage.profile.update') }}"
         method="POST"
         class="profile__form"
-        enctype="multipart/form-data">
+        enctype="multipart/form-data"
+    >
 
         @csrf
         @method('PUT')
 
-        <!-- 画像 -->
+        {{--  画像 --}}
         <div class="profile__image-section">
 
             <div class="profile__image-preview" id="imagePreview">
@@ -26,7 +27,8 @@
                     <img
                         src="{{ asset('storage/' . $user->profile_image) }}"
                         class="profile__image"
-                        alt="プロフィール画像">
+                        alt="プロフィール画像"
+                    >
                 @else
                     <div class="profile__image-placeholder"></div>
                 @endif
@@ -42,30 +44,33 @@
                 id="image"
                 name="profile_image"
                 accept="image/jpeg,image/png"
-                style="display:none;">
+                style="display:none;"
+            >
 
             @error('profile_image')
-                <div class="profile__error">{{ $message }}</div>
+                <p class="profile__error">{{ $message }}</p>
             @enderror
 
         </div>
 
-        <!-- 名前 -->
+        {{--  名前 --}}
         <div class="profile__group">
-            <label class="profile__label">ユーザー名</label>
+            <label for="name" class="profile__label">ユーザー名</label>
 
             <input
+                id="name"
                 type="text"
                 name="name"
                 value="{{ old('name', $user->name) }}"
-                class="profile__input">
+                class="profile__input"
+            >
 
             @error('name')
-                <div class="profile__error">{{ $message }}</div>
+                <p class="profile__error">{{ $message }}</p>
             @enderror
         </div>
 
-        <!-- 郵便番号 -->
+        {{--  郵便番号 --}}
         <div class="profile__group">
             <label class="profile__label">郵便番号</label>
 
@@ -73,14 +78,15 @@
                 type="text"
                 name="postal_code"
                 value="{{ old('postal_code', $user->postal_code) }}"
-                class="profile__input">
+                class="profile__input"
+            >
 
             @error('postal_code')
-                <div class="profile__error">{{ $message }}</div>
+                <p class="profile__error">{{ $message }}</p>
             @enderror
         </div>
 
-        <!-- 住所 -->
+        {{--  住所 --}}
         <div class="profile__group">
             <label class="profile__label">住所</label>
 
@@ -88,14 +94,15 @@
                 type="text"
                 name="address"
                 value="{{ old('address', $user->address) }}"
-                class="profile__input">
+                class="profile__input"
+            >
 
             @error('address')
-                <div class="profile__error">{{ $message }}</div>
+                <p class="profile__error">{{ $message }}</p>
             @enderror
         </div>
 
-        <!-- 建物名 -->
+        {{--  建物名 --}}
         <div class="profile__group">
             <label class="profile__label">建物名</label>
 
@@ -103,14 +110,15 @@
                 type="text"
                 name="building_name"
                 value="{{ old('building_name', $user->building_name) }}"
-                class="profile__input">
+                class="profile__input"
+            >
 
             @error('building_name')
-                <div class="profile__error">{{ $message }}</div>
+                <p class="profile__error">{{ $message }}</p>
             @enderror
         </div>
 
-        <!-- ボタン -->
+        {{--  ボタン --}}
         <div class="profile__button-wrapper">
             <button type="submit" class="profile__button">
                 更新する
@@ -121,7 +129,7 @@
 </div>
 
 
-<!-- 画像プレビューJS（完成版） -->
+{{--  画像プレビューJS（完成版） --}}
 <script>
 
 document.addEventListener('DOMContentLoaded', function () {

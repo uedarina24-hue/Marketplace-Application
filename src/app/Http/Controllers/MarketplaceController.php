@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Item;
 use App\Models\Category;
-use App\Models\Comment;
-use App\Models\Purchase;
 use App\Http\Requests\AddressRequest;
 use App\Http\Requests\CommentRequest;
 use App\Http\Requests\ExhibitionRequest;
@@ -14,23 +12,16 @@ use App\Http\Requests\ProfileRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\DB;
 
 
 class MarketplaceController extends Controller
 {
-
-    /*
-    |--------------------------------------------------------------------------
-    | 商品一覧
-    |--------------------------------------------------------------------------
-    */
+    //商品一覧
     public function index(Request $request)
     {
         $tab = $request->query('tab');
         $keyword = $request->query('keyword');
 
-        // keyword をセッションに保存
         if ($keyword) {
             session(['keyword' => $keyword]);
         }
@@ -40,20 +31,17 @@ class MarketplaceController extends Controller
             ->withCount(['likes', 'comments'])
             ->latest();
 
-        // 自分の商品除外
         if (Auth::check()) {
             $query->where('user_id', '!=', Auth::id());
         }
 
-        // キーワード検索
         if ($keyword) {
-        $query->where('name', 'like', "%{$keyword}%");
+            $query->where('name', 'like', "%{$keyword}%");
         }
 
         // マイリストタブ
         if ($tab === 'mylist') {
 
-            // 未ログイン
             if (!Auth::check()) {
                 $items = collect();
 
@@ -64,8 +52,7 @@ class MarketplaceController extends Controller
                 ]);
             }
 
-            // ログイン済み
-            $query->whereHas('likedUsers', function ($q) {
+            $query->whereHas('likes', function ($q) {
                 $q->where('user_id', Auth::id());
             });
         }
@@ -80,11 +67,7 @@ class MarketplaceController extends Controller
     }
 
 
-    /*
-    |--------------------------------------------------------------------------
-    | 商品詳細
-    |--------------------------------------------------------------------------
-    */
+    //商品詳細
     public function show(Item $item)
     {
         $item->load([
@@ -102,11 +85,7 @@ class MarketplaceController extends Controller
         return view('items.show', compact('item'));
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | いいね切り替え
-    |--------------------------------------------------------------------------
-    */
+    //いいね切り替え
     public function toggleLike(Item $item)
     {
         $item->likedUsers()->toggle(Auth::id());
@@ -114,26 +93,18 @@ class MarketplaceController extends Controller
         return back();
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | コメント投稿
-    |--------------------------------------------------------------------------
-    */
+    //コメント投稿
     public function commentStore(CommentRequest $request, Item $item)
     {
         $item->comments()->create([
             'user_id' => auth()->id(),
-            'content' => $request->content,
+            'content' => $request->validated()['content']
         ]);
 
         return back();
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | 購入画面
-    |--------------------------------------------------------------------------
-    */
+    //購入画面
     public function purchaseIndex(Item $item)
     {
         $user = Auth::user();
@@ -166,7 +137,6 @@ class MarketplaceController extends Controller
 
     }
 
-
     public function addressEdit(Item $item)
     {
         $user = Auth::user();
@@ -182,11 +152,7 @@ class MarketplaceController extends Controller
     }
 
 
-    /*
-    |--------------------------------------------------------------------------
-    | マイページ
-    |--------------------------------------------------------------------------
-    */
+    //マイページ
     public function mypage(Request $request)
     {
         $user = Auth::user();
@@ -195,14 +161,14 @@ class MarketplaceController extends Controller
 
         if ($page === 'sell') {
 
-            $items = Item::with('images')
+            $items = Item::with('firstImage')
                 ->where('user_id', $user->id)
                 ->latest()
                 ->get();
 
         } else {
 
-            $items = Item::with('images')
+            $items = Item::with('firstImage')
                 ->whereHas('purchase', function ($query) use ($user) {
                     $query->where('user_id', $user->id);
                 })
@@ -215,7 +181,7 @@ class MarketplaceController extends Controller
 
     public function edit()
     {
-        $user = Auth::user(); // ログインユーザーを取得
+        $user = Auth::user();
         return view('mypage.profile', compact('user'));
     }
 
@@ -254,11 +220,7 @@ class MarketplaceController extends Controller
     }
 
 
-    /*
-    |--------------------------------------------------------------------------
-    | 出品画面
-    |--------------------------------------------------------------------------
-    */
+    //出品画面
     public function create()
     {
         $categories = Category::all();
@@ -267,11 +229,7 @@ class MarketplaceController extends Controller
     }
 
 
-    /*
-    |--------------------------------------------------------------------------
-    | 出品保存
-    |--------------------------------------------------------------------------
-    */
+    //出品保存
     public function store(ExhibitionRequest $request)
     {
         $item = Item::createWithRelations(

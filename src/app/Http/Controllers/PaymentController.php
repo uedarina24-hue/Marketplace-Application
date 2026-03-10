@@ -10,13 +10,7 @@ use Stripe\Checkout\Session;
 
 class PaymentController extends Controller
 {
-
-    /*
-    |--------------------------------------------------------------------------
-    | Stripe Checkout
-    |--------------------------------------------------------------------------
-    */
-
+    //Stripe Checkout
     public function checkout(Item $item)
     {
         $user = Auth::user();
@@ -25,35 +19,28 @@ class PaymentController extends Controller
             return redirect()->route('items.index');
         }
 
-        // 支払い方法をセッションに保存
         session(['payment_method' => request('payment_method')]);
-
         Stripe::setApiKey(config('services.stripe.secret'));
 
         $session = Session::create([
 
             'customer_email'=>$user->email,
-
             'payment_method_types'=>['card'],
-
-            'line_items'=>[[
-
-                'price_data'=>[
-                    'currency'=>'jpy',
-                    'product_data'=>[
-                        'name'=>$item->name
+            'line_items'=>[
+                [
+                    'price_data'=>[
+                        'currency'=>'jpy',
+                        'product_data'=>[
+                            'name'=>$item->name
+                        ],
+                        'unit_amount'=>$item->price
                     ],
-                    'unit_amount'=>$item->price
-                ],
-
-                'quantity'=>1
-
-            ]],
+                    'quantity'=>1
+                ]
+            ],
 
             'mode'=>'payment',
-
             'success_url'=>route('payment.success',['item'=>$item]),
-
             'cancel_url'=>route('items.show',$item)
 
         ]);
@@ -61,12 +48,7 @@ class PaymentController extends Controller
         return redirect($session->url);
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | Stripe Success
-    |--------------------------------------------------------------------------
-    */
-
+    //Stripe Success
     public function success(Item $item)
     {
         $user = Auth::user();
@@ -85,5 +67,4 @@ class PaymentController extends Controller
 
         return redirect()->route('items.index');
     }
-
 }

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>COACHTECH</title>
+    <title>MarketplaceApplication</title>
 
     <link rel="stylesheet" href="{{ asset('css/sanitize.css') }}">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
@@ -15,11 +15,10 @@
 
 <div class="app">
 
-    <!-- ヘッダー -->
     <header class="header">
         <div class="header__inner container">
 
-            <!-- ロゴ -->
+            {{-- ロゴ --}}
             <div class="header__logo">
                 <a href="{{ route('items.index') }}">
                     <img
@@ -31,7 +30,7 @@
             </div>
 
 
-            <!-- 検索 -->
+            {{-- 検索 --}}
             <div class="header__search">
                 <form
                     action="{{ route('items.index') }}"
@@ -49,7 +48,7 @@
             </div>
 
 
-            <!-- ナビ -->
+            {{-- ナビ --}}
             <nav class="header__nav">
                 <ul class="header__nav-list">
                     {{-- ログイン・ログアウト切り替え --}}
@@ -70,7 +69,6 @@
                         </li>
                     @endauth
 
-                    {{-- 常に表示 --}}
                     <li class="header__nav-item">
                         <a href="{{ route('mypage') }}" class="header__nav-link">
                             マイページ
@@ -87,9 +85,7 @@
         </div>
     </header>
 
-
-
-    <!-- フラッシュメッセージ -->
+    {{-- フラッシュメッセージ --}}
     @if(session('success'))
         <div class="flash flash--success">
             {{ session('success') }}
@@ -102,9 +98,7 @@
         </div>
     @endif
 
-
-
-    <!-- メイン -->
+    {{-- メイン --}}
     <main class="main">
         @yield('content')
     </main>

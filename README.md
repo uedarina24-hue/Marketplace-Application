@@ -103,7 +103,7 @@ Lavaral 環境構築
 | id         | unsigned bigint | ◯           |            | ◯        |             |
 | user_id    | unsigned bigint |             |            | ◯        | users(id)   |
 | item_id    | unsigned bigint |             |            | ◯        | items(id)   |
-| content    | text            |             |            | ◯        |             |
+| content    | string          |             |            | ◯        |             |
 | created_at | timestamp       |             |            |          |             |
 | updated_at | timestamp       |             |            |          |             |
 
