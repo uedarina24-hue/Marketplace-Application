@@ -38,7 +38,7 @@ Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $requ
 
     // 初回プロフィール未登録ならプロフィールへ
     if (is_null($user->postal_code)) {
-        return redirect()->route('mypage.profile');
+        return redirect()->route('mypage.profile.edit');
     }
 
     // 登録済みなら商品一覧
