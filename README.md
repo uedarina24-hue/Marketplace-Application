@@ -170,6 +170,8 @@ DB_PASSWORD=root
 ## URL
 
 * 開発環境：http://localhost/
+* Register：http://localhost/register
+* Login：http://localhost/login
 * phpMyAdmin：http://localhost:8080/
 * MailHog：http://localhost:8025/
 
@@ -179,6 +181,37 @@ DB_PASSWORD=root
 * 商品一覧画像：storage/app/public/items
 * プロフィール画像：storage/app/public/profiles
 
+## Stripe決済設定
+本アプリではオンライン決済に Stripe を使用しています。
+ローカル環境で決済機能を利用するために、以下の設定を行ってください。
+
+1. Stripeアカウント作成　　
+* Stripe公式サイトでアカウントを作成してください。
+* https://stripe.com/jp
+* ダッシュボードから テスト用APIキー を取得します。
+
+2. .env に API Key を設定
+```
+STRIPE_KEY=pk_test_xxxxxxxxxxxxxxxxx
+STRIPE_SECRET=sk_test_xxxxxxxxxxxxxxxxx
+```
+※ Stripe ダッシュボードの 開発者 → APIキー から取得できます。
+
+3. テスト用カード番号
+```
+カード番号	4242 4242 4242 4242
+有効期限	任意の未来日（例: 12/34）
+CVC	任意（例: 123）
+郵便番号	任意（例: 12345）
+```
+4. 決済テスト手順
+* ユーザーでログイン
+* 商品詳細ページから「購入」ボタンを押す
+* 支払方法で カード決済 を選択
+* Stripeのテストカード番号を入力
+* 決済完了後、購入情報が purchases テーブルに保存される
+
 ## 注意事項
 * 支払方法はstripeを使っているため、コンビニ支払では購入完了できないため、カード決済のみを購入完了としている。
 * その為、テストケースでもカード決済のみでテストを行っている。
+* テストケースではユーザ登録後メール認証からプロフールに入るのでテストの流れが異なります。
