@@ -12,10 +12,10 @@
 プロフィール
 =============================== */
 .mypage__profile {
-    position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 300px;
 }
 
 
@@ -23,13 +23,13 @@
     display: flex;
     align-items: center;
     gap: 80px;
-    transform: translateX(120px);
 }
 
 .mypage__profile-right {
-    position: absolute;
-    right: 120px;
+    display: flex;
+    align-items: center;
 }
+
 
 /* プロフィール画像 */
 .mypage__profile-image {
@@ -208,7 +208,13 @@
     .mypage__profile {
         flex-direction: column;
         gap: 20px;
-        align-items: flex-start;
+        align-items: center;
+        text-align: center;
+    }
+
+    .mypage__profile-left {
+        flex-direction: column;
+        gap: 16px;
     }
 
     .mypage__items {
