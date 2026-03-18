@@ -13,18 +13,18 @@
 
         <div class="mypage__profile-left">
 
-            @if(Auth::user()->profile_image)
+            @if($user->profile_image)
                 <img
-                    src="{{ asset('storage/' . Auth::user()->profile_image) }}"
+                    src="{{ asset('storage/' . $user->profile_image) }}"
                     class="mypage__profile-image"
-                    alt="{{ Auth::user()->name }}"
+                    alt="{{ $user->name }}"
                 >
             @else
                 <div class="mypage__profile-image mypage__profile-image--placeholder"></div>
             @endif
 
             <div class="mypage__profile-name">
-                {{ Auth::user()->name }}
+                {{ $user->name }}
             </div>
 
         </div>
@@ -48,14 +48,14 @@
 
         <a
             href="{{ route('mypage', ['page'=>'sell']) }}"
-            class="mypage__tab {{ request('page') !== 'buy' ? 'mypage__tab--active' : '' }}"
+            class="mypage__tab {{ $page !== 'buy' ? 'mypage__tab--active' : '' }}"
         >
             出品した商品
         </a>
 
         <a
             href="{{ route('mypage', ['page'=>'buy']) }}"
-            class="mypage__tab {{ request('page') === 'buy' ? 'mypage__tab--active' : '' }}"
+            class="mypage__tab {{ $page === 'buy' ? 'mypage__tab--active' : '' }}"
         >
             購入した商品
         </a>

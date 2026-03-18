@@ -42,7 +42,7 @@
                         name="keyword"
                         class="search-form__input"
                         placeholder="なにをお探しですか？"
-                        value="{{ request('keyword', session('keyword')) }}"
+                        value="{{ request('keyword') }}"
                     >
                 </form>
             </div>

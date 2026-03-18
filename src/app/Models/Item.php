@@ -89,12 +89,71 @@ class Item extends Model
     | 業務ロジック
     |--------------------------------------------------------------------------
     */
+
+    //検索機能
+    public function scopeSearch($query, $keyword)
+    {
+        if ($keyword) {
+            $query->where('name','like',"%{$keyword}%");
+        }
+        return $query;
+    }
+
+    // 自分の商品を除外
+    public function scopeExcludeOwn($query, $userId)
+    {
+        if ($userId) {
+            $query->where('user_id','!=',$userId);
+        }
+        return $query;
+    }
+
+    // いいねした商品
+    public function scopeLikedBy($query, $userId)
+    {
+        $query->whereHas('likes',function($q) use ($userId){
+            $q->where('user_id',$userId);
+        });
+        return $query;
+    }
+
     //いいね判定
     public function isLikedBy($user)
     {
-        if (!$user) return false;
+        if (!$user) {
+            return false;
+        }
 
-        return $this->likes->contains('user_id', $user->id);
+        return $this->likes()
+            ->where('user_id', $user->id)
+            ->exists();
+    }
+
+    //商品購入
+    public function isPurchasableBy($user)
+    {
+        if($this->purchase){
+            return false;
+        }
+
+        if(!$user->postal_code || !$user->address){
+            return false;
+        }
+
+        return true;
+    }
+
+    //マイページ
+    public function scopeOwnedBy($query, $userId)
+    {
+        return $query->where('user_id', $userId);
+    }
+
+    public function scopePurchasedBy($query, $userId)
+    {
+        return $query->whereHas('purchase', function ($q) use ($userId) {
+            $q->where('user_id', $userId);
+        });
     }
 
     //商品作成

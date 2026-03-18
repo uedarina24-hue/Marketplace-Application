@@ -16,53 +16,35 @@ use Illuminate\Support\Facades\Storage;
 
 class MarketplaceController extends Controller
 {
-    //商品一覧
+    // 商品一覧
     public function index(Request $request)
     {
         $tab = $request->query('tab');
         $keyword = $request->query('keyword');
 
-        if ($keyword) {
-            session(['keyword' => $keyword]);
-        }
-
         $query = Item::query()
             ->with(['firstImage', 'purchase'])
             ->withCount(['likes', 'comments'])
+            ->search($keyword)
             ->latest();
 
-        if (Auth::check()) {
-            $query->where('user_id', '!=', Auth::id());
-        }
-
-        if ($keyword) {
-            $query->where('name', 'like', "%{$keyword}%");
-        }
-
-        // マイリストタブ
         if ($tab === 'mylist') {
 
             if (!Auth::check()) {
                 $items = collect();
-
-                return view('items.index', [
-                    'items' => $items,
-                    'tab' => $tab,
-                    'keyword' => session('keyword')
-                ]);
+            } else {
+                $items = $query->likedBy(Auth::id())->get();
             }
 
-            $query->whereHas('likes', function ($q) {
-                $q->where('user_id', Auth::id());
-            });
-        }
+        } else {
 
-        $items = $query->get();
+            $items = $query->excludeOwn(Auth::id())->get();
+        }
 
         return view('items.index', [
             'items' => $items,
             'tab' => $tab,
-            'keyword' => $keyword ?? session('keyword')
+            'keyword' => $keyword
         ]);
     }
 
@@ -88,6 +70,10 @@ class MarketplaceController extends Controller
     //いいね切り替え
     public function toggleLike(Item $item)
     {
+        if ($item->user_id === Auth::id()) {
+            return back();
+        }
+
         $item->likedUsers()->toggle(Auth::id());
 
         return back();
@@ -120,21 +106,21 @@ class MarketplaceController extends Controller
     {
         $user = Auth::user();
 
-        if($item->purchase){
-            return redirect()->route('items.index');
-        }
+        if (!$item->isPurchasableBy($user)) {
 
-        if(!$user->postal_code || !$user->address){
-            return redirect()
-                ->route('purchase.address.edit',$item)
-                ->with('error','配送先を登録してください');
+            if (!$user->postal_code || !$user->address) {
+                return redirect()
+                    ->route('purchase.address.edit', $item)
+                    ->with('error','配送先を登録してください');
+            }
+
+            return redirect()->route('items.index');
         }
 
         return redirect()->route('payment.checkout',[
             'item'=>$item,
             'payment_method'=>$request->payment_method
         ]);
-
     }
 
     public function addressEdit(Item $item)
@@ -151,34 +137,31 @@ class MarketplaceController extends Controller
         return redirect()->route('purchase.index', $item);
     }
 
-
-    //マイページ
+    // マイページ
     public function mypage(Request $request)
     {
         $user = Auth::user();
-
         $page = $request->query('page', 'sell');
 
         if ($page === 'sell') {
 
             $items = Item::with('firstImage')
-                ->where('user_id', $user->id)
+                ->ownedBy($user->id)
                 ->latest()
                 ->get();
 
         } else {
 
             $items = Item::with('firstImage')
-                ->whereHas('purchase', function ($query) use ($user) {
-                    $query->where('user_id', $user->id);
-                })
+                ->purchasedBy($user->id)
                 ->latest()
                 ->get();
         }
 
-        return view('mypage.index', compact('items','page'));
+        return view('mypage.index', compact('items','page','user'));
     }
 
+    // マイページプロフィール編集
     public function edit()
     {
         $user = Auth::user();
@@ -189,7 +172,9 @@ class MarketplaceController extends Controller
     {
         $user = Auth::user();
 
-        $isFirstProfileSetup = is_null($user->postal_code);
+        $isFirstProfileSetup = empty($user->postal_code);
+
+        $data = $request->validated();
 
         if ($request->hasFile('profile_image')) {
 
@@ -197,26 +182,17 @@ class MarketplaceController extends Controller
                 Storage::disk('public')->delete($user->profile_image);
             }
 
-            $path = $request->file('profile_image')
+            $data['profile_image'] = $request->file('profile_image')
                 ->store('profiles', 'public');
-
-            $user->profile_image = $path;
         }
 
-        $user->name = $request->name;
-        $user->postal_code = $request->postal_code;
-        $user->address = $request->address;
-        $user->building_name = $request->building_name;
-
-        $user->save();
+        $user->update($data);
 
         if ($isFirstProfileSetup) {
-            return redirect()
-                ->route('items.index');
+            return redirect()->route('items.index');
         }
 
-        return redirect()
-            ->route('mypage');
+        return redirect()->route('mypage');
     }
 
 

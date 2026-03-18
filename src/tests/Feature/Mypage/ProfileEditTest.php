@@ -32,10 +32,10 @@ class ProfileEditTest extends TestCase
         $response->assertStatus(200);
 
         // 3. フォームに初期値がセットされていることを確認
-        $response->assertSee('value="テストユーザー"', false); // ユーザー名
-        $response->assertSee('value="123-4567"', false);       // 郵便番号
-        $response->assertSee('value="東京都渋谷区"', false);   // 住所
-        $response->assertSee('value="テストビル101"', false);  // 建物名
+        $response->assertSee('value="テストユーザー"', false);
+        $response->assertSee('value="123-4567"', false);
+        $response->assertSee('value="東京都渋谷区"', false);
+        $response->assertSee('value="テストビル101"', false);
 
         // 4. プロフィール画像のパスも表示されていること
         $response->assertSee('profiles/dummy_profile.jpg');
