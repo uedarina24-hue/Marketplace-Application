@@ -6,6 +6,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -66,6 +67,24 @@ class User extends Authenticatable implements MustVerifyEmail
     public function purchases()
     {
         return $this->hasMany(Purchase::class);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | アクセサ
+    |--------------------------------------------------------------------------
+    */
+    public function getProfileImageUrlAttribute()
+    {
+        if (!$this->profile_image) {
+            return null;
+        }
+
+        if (str_starts_with($this->profile_image, 'images/')) {
+            return asset($this->profile_image);
+        }
+
+        return Storage::url($this->profile_image);
     }
 
 }

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 class ItemImage extends Model
 {
@@ -38,5 +39,18 @@ class ItemImage extends Model
         return $item->images()->create([
             'image_path' => $path,
         ]);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | アクセサ
+    |--------------------------------------------------------------------------
+    */
+    public function getImageUrlAttribute()
+    {
+        if (str_starts_with($this->image_path, 'images/')) {
+            return asset($this->image_path);
+        }
+        return Storage::url($this->image_path);
     }
 }

@@ -25,7 +25,7 @@
 
                 @if($user->profile_image)
                     <img
-                        src="{{ asset('storage/' . $user->profile_image) }}"
+                        src="{{ $user->profile_image_url }}"
                         class="profile__image"
                         alt="プロフィール画像"
                     >

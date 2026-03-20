@@ -23,8 +23,11 @@
 5. php artisan key:generate
 6. php artisan migrate
 7. php artisan db:seed
-8. php artisan storage:link
-9. php artisan test
+8. storage画像用ディレクトリ作成
+* mkdir -p storage/app/public/items
+* mkdir -p storage/app/public/profiles
+9. php artisan storage:link
+10. php artisan test
 
 ## PHPunitを用いたテスト手順
 1. docker-compose exec mysql bash
@@ -176,10 +179,10 @@ DB_PASSWORD=root
 * MailHog：http://localhost:8025/
 
 ## ダミーデータ作成・画像
-画像は下記に保存されている。
-* ストレージリンク作成：php artisan storage:link
-* 商品一覧画像：storage/app/public/items
-* プロフィール画像：storage/app/public/profiles
+| 用途           | public パス               | storage パス                  |
+| -------------- | ------------------------ | ---------------------------- |
+| 商品一覧画像    | `public/images/items`    | `storage/app/public/items`   |
+| プロフィール画像 | `public/images/profiles` | `storage/app/public/profiles`|
 
 ## Stripe決済設定
 本アプリではオンライン決済に Stripe を使用しています。

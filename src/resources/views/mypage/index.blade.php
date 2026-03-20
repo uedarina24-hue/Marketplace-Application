@@ -13,9 +13,9 @@
 
         <div class="mypage__profile-left">
 
-            @if($user->profile_image)
+            @if($user->profile_image_url)
                 <img
-                    src="{{ asset('storage/' . $user->profile_image) }}"
+                    src="{{ $user->profile_image_url }}"
                     class="mypage__profile-image"
                     alt="{{ $user->name }}"
                 >
@@ -76,7 +76,7 @@
 
                     @if($item->firstImage)
                         <img
-                            src="{{ asset('storage/' . $item->firstImage->image_path) }}"
+                            src="{{ $item->firstImage->image_url }}"
                             class="mypage__item-image"
                             alt="{{ $item->name }}"
                         >

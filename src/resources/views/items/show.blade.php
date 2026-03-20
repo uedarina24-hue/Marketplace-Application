@@ -15,7 +15,7 @@
 
             @if($item->firstImage)
                 <img
-                    src="{{ asset('storage/' . $item->firstImage->image_path) }}"
+                    src="{{ $item->firstImage->image_url }}"
                     class="item-detail__image"
                     alt="{{ $item->name }}"
                 >
@@ -223,11 +223,11 @@
 
                                 <div class="item-detail__comment-user-icon">
 
-                                    @if($comment->user->profile_image)
+                                    @if($comment->user->profile_image_url)
                                         <img
-                                            src="{{ asset('storage/' . $comment->user->profile_image) }}"
-                                            alt="{{ $comment->user->name }}"
+                                            src="{{ $comment->user->profile_image_url }}"
                                             class="item-detail__comment-user-image"
+                                            alt="ユーザーアイコン"
                                         >
                                     @else
                                     <div class="item-detail__comment-user-placeholder"></div>

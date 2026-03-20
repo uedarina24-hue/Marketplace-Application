@@ -19,7 +19,7 @@
 
             <div class="purchase__item">
                 @if($item->firstImage)
-                    <img src="{{ asset('storage/' . $item->firstImage->image_path) }}"
+                    <img src="{{ $item->firstImage->image_url }}"
                         class="purchase__item-image">
                 @else
                     <div class="purchase__item-image">商品画像</div>
