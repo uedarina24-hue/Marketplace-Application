@@ -70,14 +70,14 @@ class ItemDetailTest extends TestCase
         $response->assertSee($item->condition);
 
         // 画像
-        $response->assertSee($item->firstImage->image_path);
+        $response->assertSee($item->firstImage->image_url);
 
         // コメント情報
         $comment = $item->comments->first();
         $response->assertSee($comment->content);
         $response->assertSee($comment->user->name);
         if ($comment->user->profile_image) {
-            $response->assertSee($comment->user->profile_image);
+            $response->assertSee($comment->user->profile_image_url);
         }
 
         // いいね数・コメント数

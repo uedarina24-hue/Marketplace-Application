@@ -18,7 +18,7 @@ class UserProfileTest extends TestCase
      */
     public function user_profile_displays_correct_information()
     {
-        // ユーザー作成
+
         $user = User::factory()->create([
             'name' => 'テストユーザー',
             'profile_image' => 'profiles/dummy_profile.jpg',
@@ -26,37 +26,28 @@ class UserProfileTest extends TestCase
 
         $this->actingAs($user);
 
-        // 出品商品作成
         $items = Item::factory()->count(2)->for($user)->create();
         foreach ($items as $item) {
-            ItemImage::factory()->for($item)->create([
-                'image_path' => 'items/dummy_item.jpg',
-            ]);
+            ItemImage::factory()->for($item)->create();
         }
 
-        // 購入商品作成
         $purchasedItem = Item::factory()->create();
         Purchase::factory()->create([
             'user_id' => $user->id,
             'item_id' => $purchasedItem->id,
         ]);
 
-        // プロフィール（マイページ）取得
-        $response = $this->get(route('mypage', ['page' => 'sell'])); // ← ここを修正
+        $responseSell = $this->get(route('mypage', ['page' => 'sell']));
+        $responseSell->assertStatus(200);
 
-        $response->assertStatus(200);
+        $responseSell->assertSeeText('テストユーザー');
+        $responseSell->assertSee($user->profile_image_url);
 
-        // ユーザー情報
-        $response->assertSeeText('テストユーザー');
-        $response->assertSee('profiles/dummy_profile.jpg');
-
-        // 出品商品
         foreach ($items as $item) {
-            $response->assertSeeText($item->name);
-            $response->assertSee('items/dummy_item.jpg');
+            $responseSell->assertSeeText($item->name);
+            $responseSell->assertSee($item->firstImage->image_url);
         }
 
-        // 購入商品は buy タブで確認
         $responseBuy = $this->get(route('mypage', ['page' => 'buy']));
         $responseBuy->assertStatus(200);
         $responseBuy->assertSeeText($purchasedItem->name);
