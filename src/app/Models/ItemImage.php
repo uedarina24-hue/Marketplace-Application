@@ -33,7 +33,7 @@ class ItemImage extends Model
     */
     public static function storeForItem(Item $item, UploadedFile $imageFile)
     {
-        // Laravel標準の画像保存
+
         $path = $imageFile->store('items', 'public');
 
         return $item->images()->create([

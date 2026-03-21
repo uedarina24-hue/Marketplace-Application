@@ -13,21 +13,39 @@
 4. .env ファイルの変更
 
 ```
-　DB_HOSTをmysqlに変更
-　DB_DATABASEをlaravel_dbに変更
-　DB_USERNAMEをlaravel_userに変更
-　DB_PASSをlaravel_passに変更
-　MAIL_FROM_ADDRESSに送信元アドレスを設定
+# DB 設定
+DB_HOST=mysql
+DB_DATABASE=laravel_db
+DB_USERNAME=laravel_user
+DB_PASSWORD=laravel_pass
+
+# メール送信設定（開発環境 MailHog）
+MAIL_MAILER=smtp
+MAIL_HOST=mailhog　# Docker内 PHP-FPM から接続する場合
+MAIL_PORT=1025
+MAIL_USERNAME=null
+MAIL_PASSWORD=null
+MAIL_ENCRYPTION=null
+MAIL_FROM_ADDRESS="test@example.com"
+MAIL_FROM_NAME="Marketplace App"
 ```
 
 5. php artisan key:generate
 6. php artisan migrate
 7. php artisan db:seed
 8. storage画像用ディレクトリ作成
-* mkdir -p storage/app/public/items
-* mkdir -p storage/app/public/profiles
+```
+mkdir -p storage/app/public/items
+mkdir -p storage/app/public/profiles
+```
 9. php artisan storage:link
 10. php artisan test
+
+
+## メール認証（MailHog）設定
+1. Homebrew でインストール（まだインストールされていない場合）：brew install mailhog
+2. MailHog を起動：mailhog
+
 
 ## PHPunitを用いたテスト手順
 1. docker-compose exec mysql bash
@@ -159,9 +177,8 @@ DB_PASSWORD=root
 * メールアドレス：yamada.hanako@example.com /password
 ### 一般ユーザー（未認証）
 * メールアドレス：suzuki.ichiro@example.com /password
-
-※初回ログイン時に手動送信によるメール認証が必要です
-
+  * 初回ログイン時に手動送信によるメール認証が必要です
+  * 認証メールは MailHog（http://localhost:8025/）で確認できます
 ## 使用技術
 
 * PHP 7.4.9
