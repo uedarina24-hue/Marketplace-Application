@@ -7,241 +7,132 @@
 @section('content')
 
 <div class="sell">
-    <h1 class="sell__title">商品の出品</h1>
+    <h1 class="sell__title">{{ isset($item) ? '商品の編集' : '商品の出品' }}</h1>
+
     <form
-        action="{{ route('items.store') }}"
+        action="{{ isset($item) ? route('items.update', $item) : route('items.store') }}"
         method="POST"
         enctype="multipart/form-data"
         class="sell__form"
     >
-    @csrf
+        @csrf
+        @if(isset($item))
+            @method('PUT')
+        @endif
 
         {{-- 商品画像 --}}
         <div class="sell__section">
-            <label
-                for="image"
-                class="sell__label"
-            >
-                商品画像
-            </label>
+            <label class="sell__label">商品画像</label>
 
-            <div class="sell__image-upload">
-                <input
-                    id="image"
-                    type="file"
-                    name="image"
-                    class="sell__image-input"
-                    accept="image/*"
-                >
+            <input type="hidden" name="existing_image" id="existing-image-input"
+                value="{{ isset($item) ? $item->image : '' }}">
 
-                {{-- プレビュー --}}
-                <div
-                    id="image-preview"
-                    class="sell__image-preview"
-                    style="display:none;"
-                >
-                    <img
-                        id="preview-img"
-                        class="sell__preview-img"
-                        alt="preview"
-                    >
-                </div>
-                <label
-                    for="image"
-                    id="preview-text"
-                    class="sell__image-button"
-                >
-                    画像を選択する
-                </label>
+            <div id="image-preview" class="sell__image-preview"
+                style="height:300px; border:1px dashed #ccc; display:flex; align-items:center; justify-content:center;">
 
-                @error('image')
-                    <p class="sell__error">
-                        {{ $message }}
-                    </p>
-                @enderror
+                @if(isset($item) && $item->image)
+                    <img id="preview-img" class="sell__preview-img"
+                        src="{{ asset('storage/' . $item->image) }}"
+                        style="object-fit:contain; width:100%; height:100%;">
+                @else
+                    <img id="preview-img" class="sell__preview-img" style="display:none;">
+                @endif
             </div>
+
+            <label for="image" class="sell__image-button" style="margin-top:10px;">画像を選択する</label>
+            <input type="file" name="image" id="image" class="sell__image-input" accept="image/jpeg,image/png">
+
+            @error('image')
+                <p class="sell__error">{{ $message }}</p>
+            @enderror
         </div>
 
-        {{-- 商品の詳細 --}}
+        {{-- 商品詳細 --}}
         <div class="sell__section">
-            <h2 class="sell__section-title">
-                商品の詳細
-            </h2>
+            <h2 class="sell__section-title">商品詳細</h2>
 
             {{-- カテゴリー --}}
             <div class="sell__form-group">
-                <span class="sell__label">
-                    カテゴリー
-                </span>
+                <span class="sell__label">カテゴリー</span>
                 <div class="sell__categories">
                     @foreach ($categories as $category)
-                    <label class="sell__category">
-                        <input
-                            type="checkbox"
-                            name="categories[]"
-                            value="{{ $category->id }}"
-                            class="sell__category-input"
-                            {{ (is_array(old('categories')) && in_array($category->id, old('categories'))) ? 'checked' : '' }}
-                        >
-                        <span class="sell__category-label">
-                            {{ $category->name }}
-                        </span>
-                    </label>
+                        <label class="sell__category">
+                            <input type="checkbox"
+                                name="categories[]"
+                                value="{{ $category->id }}"
+                                class="sell__category-input"
+                                {{ (isset($item) && $item->categories->contains($category->id)) || (is_array(old('categories')) && in_array($category->id, old('categories'))) ? 'checked' : '' }}>
+                            <span class="sell__category-label">{{ $category->name }}</span>
+                        </label>
                     @endforeach
                 </div>
-
                 @error('categories')
-                    <p class="sell__error">
-                        {{ $message }}
-                    </p>
+                    <p class="sell__error">{{ $message }}</p>
                 @enderror
-
             </div>
-
 
             {{-- 商品状態 --}}
             <div class="sell__form-group">
-                <label
-                    for="condition"
-                    class="sell__label"
-                >
-                    商品の状態
-                </label>
-                <select
-                    id="condition"
-                    name="condition"
-                    class="sell__select"
-                >
+                <label for="condition" class="sell__label">商品の状態</label>
+                <select id="condition" name="condition" class="sell__select">
                     <option value="">選択してください</option>
-                    <option value="新品・未使用" {{ old('condition') == '新品・未使用' ? 'selected' : '' }}>新品・未使用</option>
-                    <option value="未使用に近い" {{ old('condition') == '未使用に近い' ? 'selected' : '' }}>未使用に近い</option>
-                    <option value="目立った傷や汚れなし" {{ old('condition') == '目立った傷や汚れなし' ? 'selected' : '' }}>目立った傷や汚れなし</option>
-                    <option value="やや傷や汚れあり" {{ old('condition') == 'やや傷や汚れあり' ? 'selected' : '' }}>やや傷や汚れあり</option>
-                    <option value="傷や汚れあり" {{ old('condition') == '傷や汚れあり' ? 'selected' : '' }}>傷や汚れあり</option>
-                    <option value="全体的に状態が悪い" {{ old('condition') == '全体的に状態が悪い' ? 'selected' : '' }}>全体的に状態が悪い</option>
+                    @foreach(['新品・未使用','未使用に近い','目立った傷や汚れなし','やや傷や汚れあり','傷や汚れあり','全体的に状態が悪い'] as $state)
+                        <option value="{{ $state }}"
+                            {{ (isset($item) && $item->condition == $state) || old('condition') == $state ? 'selected' : '' }}>
+                            {{ $state }}
+                        </option>
+                    @endforeach
                 </select>
-
                 @error('condition')
-                    <p class="sell__error">
-                        {{ $message }}
-                    </p>
+                    <p class="sell__error">{{ $message }}</p>
                 @enderror
-
             </div>
-
         </div>
 
-
-        {{-- 商品名と説明 --}}
+        {{-- 商品名・説明・ブランド・価格 --}}
         <div class="sell__section">
-            <h2 class="sell__section-title">
-                商品名と説明
-            </h2>
+            <h2 class="sell__section-title">商品名と説明</h2>
 
-            {{-- 商品名 --}}
             <div class="sell__form-group">
-                <label
-                    for="name"
-                    class="sell__label"
-                >
-                    商品名
-                </label>
-                <input
-                    id="name"
-                    type="text"
-                    name="name"
-                    class="sell__input"
-                    value="{{ old('name') }}"
-                >
-
+                <label for="name" class="sell__label">商品名</label>
+                <input type="text" name="name" class="sell__input"
+                    value="{{ isset($item) ? $item->name : old('name') }}">
                 @error('name')
-                    <p class="sell__error">
-                        {{ $message }}
-                    </p>
+                    <p class="sell__error">{{ $message }}</p>
                 @enderror
-
             </div>
 
-
-            {{-- ブランド名 --}}
             <div class="sell__form-group">
-                <label
-                    for="brand_name"
-                    class="sell__label"
-                >
-                    ブランド名
-                </label>
-                <input
-                    id="brand_name"
-                    type="text"
-                    name="brand_name"
-                    class="sell__input"
-                    value="{{ old('brand_name') }}"
-                >
+                <label for="brand_name" class="sell__label">ブランド名</label>
+                <input type="text" name="brand_name" class="sell__input"
+                    value="{{ isset($item) ? $item->brand_name : old('brand_name') }}">
             </div>
 
-
-            {{-- 商品説明 --}}
             <div class="sell__form-group">
-                <label
-                    for="description"
-                    class="sell__label"
-                >
-                    商品の説明
-                </label>
-                <textarea
-                    id="description"
-                    name="description"
-                    class="sell__textarea"
-                >{{ old('description') }}</textarea>
-
+                <label for="description" class="sell__label">商品の説明</label>
+                <textarea name="description" class="sell__textarea">{{ isset($item) ? $item->description : old('description') }}</textarea>
                 @error('description')
-                    <p class="sell__error">
-                        {{ $message }}
-                    </p>
+                    <p class="sell__error">{{ $message }}</p>
                 @enderror
-
             </div>
 
-
-            {{-- 価格 --}}
             <div class="sell__form-group">
-                <label
-                    for="price"
-                    class="sell__label"
-                >
-                    販売価格
-                </label>
+                <label for="price" class="sell__label">販売価格</label>
                 <div class="sell__price">
-                    <span class="sell__price-symbol">
-                        ¥
-                    </span>
-                    <input
-                        id="price"
-                        type="text"
-                        name="price"
-                        class="sell__input sell__input--price"
-                        value="{{ old('price') }}"
-                    >
+                    <span class="sell__price-symbol">¥</span>
+                    <input type="text" name="price" class="sell__input sell__input--price"
+                        value="{{ isset($item) ? $item->price : old('price') }}">
                 </div>
-
                 @error('price')
-                    <p class="sell__error">
-                        {{ $message }}
-                    </p>
+                    <p class="sell__error">{{ $message }}</p>
                 @enderror
-
             </div>
         </div>
-
 
         {{-- 出品ボタン --}}
         <div class="sell__submit">
-            <button
-                type="submit"
-                class="sell__submit-button"
-            >
-                出品する
+            <button type="submit" class="sell__submit-button">
+                {{ isset($item) ? '更新する' : '出品する' }}
             </button>
         </div>
     </form>
@@ -249,40 +140,24 @@
 
 @endsection
 
-
-{{-- 画像プレビューJS --}}
 @section('js')
-
 <script>
-
 document.addEventListener('DOMContentLoaded', function () {
-
-    const input = document.getElementById('image');
-    const preview = document.getElementById('image-preview');
+    const fileInput = document.getElementById('image');
     const previewImg = document.getElementById('preview-img');
-    const previewText = document.getElementById('preview-text');
+    const preview = document.getElementById('image-preview');
+    const hiddenInput = document.getElementById('existing-image-input');
 
-    input.addEventListener('change', function(e) {
 
+    fileInput.addEventListener('change', function(e) {
         const file = e.target.files[0];
         if (!file) return;
 
-        const reader = new FileReader();
+        previewImg.src = URL.createObjectURL(file);
+        previewImg.style.display = 'block';
 
-        reader.onload = function(e) {
-
-            previewImg.src = e.target.result;
-            preview.style.display = 'block';
-            previewText.style.display = 'none';
-
-        };
-
-        reader.readAsDataURL(file);
-
+        hiddenInput.value = '';
     });
-
 });
-
 </script>
-
 @endsection

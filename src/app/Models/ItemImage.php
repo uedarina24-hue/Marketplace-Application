@@ -31,10 +31,15 @@ class ItemImage extends Model
     | 業務ロジック
     |--------------------------------------------------------------------------
     */
-    public static function storeForItem(Item $item, UploadedFile $imageFile)
+    public static function storeForItem(Item $item, $image)
     {
-
-        $path = $imageFile->store('items', 'public');
+        if ($image instanceof UploadedFile) {
+            // PCからアップロード
+            $path = $image->store('items', 'public');
+        } else {
+            // 既存の storage 画像パス
+            $path = $image;
+        }
 
         return $item->images()->create([
             'image_path' => $path,

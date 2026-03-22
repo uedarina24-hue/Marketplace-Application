@@ -165,7 +165,13 @@ class MarketplaceController extends Controller
     public function edit()
     {
         $user = Auth::user();
-        return view('mypage.profile', compact('user'));
+
+        $existingImages = [];
+        if ($user->profile_image) {
+            $existingImages[] = $user->profile_image;
+        }
+
+        return view('mypage.profile', compact('user', 'existingImages'));
     }
 
     public function update(ProfileRequest $request)
@@ -184,6 +190,10 @@ class MarketplaceController extends Controller
 
             $data['profile_image'] = $request->file('profile_image')
                 ->store('profiles', 'public');
+
+        } elseif ($request->filled('existing_profile_image')) {
+
+            $data['profile_image'] = $request->input('existing_profile_image');
         }
 
         $user->update($data);
@@ -200,8 +210,8 @@ class MarketplaceController extends Controller
     public function create()
     {
         $categories = Category::all();
-
-        return view('items.sell', compact('categories'));
+        $images = [];
+        return view('items.sell', compact('categories', 'images'));
     }
 
 
@@ -210,11 +220,10 @@ class MarketplaceController extends Controller
     {
         $item = Item::createWithRelations(
             $request->validated(),
-            $request->file('image')
+            $request->file('image') ?? $request->input('existing_image')
         );
 
         return redirect()->route('items.show', $item);
     }
-
 
 }

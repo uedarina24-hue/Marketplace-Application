@@ -47,6 +47,8 @@
                 style="display:none;"
             >
 
+            <input type="hidden" name="existing_profile_image" id="existing-image-input">
+
             @error('profile_image')
                 <p class="profile__error">{{ $message }}</p>
             @enderror
@@ -129,28 +131,48 @@
 </div>
 
 
-{{--  画像プレビューJS（完成版） --}}
+{{--  画像プレビューJS --}}
 <script>
 
 document.addEventListener('DOMContentLoaded', function () {
 
-    const input = document.getElementById('image');
+    const fileInput = document.getElementById('image');
     const preview = document.getElementById('imagePreview');
+    const hiddenInput = document.getElementById('existing-image-input');
 
-    input.addEventListener('change', function(e) {
-
+    // 新規アップロード
+    fileInput.addEventListener('change', function(e) {
         const file = e.target.files[0];
-
         if (!file) return;
 
         const img = document.createElement('img');
-
         img.src = URL.createObjectURL(file);
         img.className = 'profile__image';
 
         preview.innerHTML = '';
         preview.appendChild(img);
 
+        // 既存画像選択解除
+        hiddenInput.value = '';
+    });
+
+    // 既存画像クリック
+    document.querySelectorAll('.profile__existing-image').forEach(img => {
+        img.addEventListener('click', function() {
+            const path = img.dataset.path;
+
+            hiddenInput.value = path;
+
+            const previewImg = document.createElement('img');
+            previewImg.src = '/storage/' + path;
+            previewImg.className = 'profile__image';
+
+            preview.innerHTML = '';
+            preview.appendChild(previewImg);
+
+            // 新規アップロード解除
+            fileInput.value = '';
+        });
     });
 
 });
