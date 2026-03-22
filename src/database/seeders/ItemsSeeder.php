@@ -7,6 +7,8 @@ use App\Models\Item;
 use App\Models\ItemImage;
 use App\Models\Category;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 
 class ItemsSeeder extends Seeder
 {
@@ -122,7 +124,20 @@ class ItemsSeeder extends Seeder
 
             foreach ($items as $data) {
 
-                // items 保存
+                // ========= ① ファイル準備 =========
+                $sourcePath = public_path($data['image']);
+                $fileName = basename($data['image']);
+                $storagePath = 'public/items/' . $fileName;
+
+                // ========= ② storageへコピー =========
+                if (File::exists($sourcePath)) {
+                    Storage::put($storagePath, File::get($sourcePath));
+                } else {
+                    // 万一の保険（ダミー）
+                    Storage::put($storagePath, str_repeat('0', 100));
+                }
+
+                // ========= ③ items保存 =========
                 $item = Item::create([
                     'user_id' => 1,
                     'name' => $data['name'],
@@ -132,13 +147,13 @@ class ItemsSeeder extends Seeder
                     'condition' => $data['condition'],
                 ]);
 
-                // item_images 保存
+                // ========= ④ 画像保存 =========
                 ItemImage::create([
                     'item_id' => $item->id,
-                    'image_path' => $data['image'],
+                    'image_path' => 'items/' . $fileName,
                 ]);
 
-                // categories 保存（多対多）
+                // ========= ⑤ カテゴリ =========
                 $categoryIds = Category::whereIn('name', $data['categories'])->pluck('id');
                 $item->categories()->attach($categoryIds);
             }
@@ -147,7 +162,7 @@ class ItemsSeeder extends Seeder
 
         } catch (\Exception $e) {
             DB::rollback();
-            echo $e->getMessage();
+            throw $e;
         }
     }
 }

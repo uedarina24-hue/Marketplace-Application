@@ -39,11 +39,11 @@
             <div class="address-edit__group">
                 <label for="building_name" class="address-edit__label">建物名</label>
                 <input type="text" name="building_name"
-                    value="{{ old('building_name', $user->building_name) }}"
+                    value="{{ old('building_name', $user->building_name ?? '') }}"
                     class="address-edit__input" id="building_name">
             </div>
 
-            <button class="address-edit__submit">更新する</button>
+            <button type="submit" class="address-edit__submit">更新する</button>
         </form>
     </div>
 

@@ -1,4 +1,7 @@
 # Marketplace-Application
+## 概要
+本アプリはフリマアプリを模したマーケットプレイスです。
+ユーザーは商品を出品・購入・コメント・いいねすることができます。
 
 ## 環境構築
 
@@ -21,7 +24,7 @@ DB_PASSWORD=laravel_pass
 
 # メール送信設定（開発環境 MailHog）
 MAIL_MAILER=smtp
-MAIL_HOST=mailhog　# Docker内 PHP-FPM から接続する場合
+MAIL_HOST=mailhog # Dockerコンテナ名に依存
 MAIL_PORT=1025
 MAIL_USERNAME=null
 MAIL_PASSWORD=null
@@ -29,22 +32,36 @@ MAIL_ENCRYPTION=null
 MAIL_FROM_ADDRESS="test@example.com"
 MAIL_FROM_NAME="Marketplace App"
 ```
+※ MAIL_FROM_ADDRESS は任意のメールアドレスで問題ありません。
+開発環境では実際の送信は行われず、MailHogで確認できます。
 
 5. php artisan key:generate
 6. php artisan migrate
-7. php artisan db:seed
-8. storage画像用ディレクトリ作成
+
+### Seeder実行時の注意
+本アプリでは、Seederで商品画像を登録しています。
+
+そのため、Seeder実行前に storage ディレクトリの準備を行ってください。
+### 手順
+1. storage画像用ディレクトリ作成
 ```
 mkdir -p storage/app/public/items
 mkdir -p storage/app/public/profiles
 ```
-9. php artisan storage:link
-10. php artisan test
+2. php artisan storage:link
+3. php artisan db:seed
+### 注意
+- 上記手順を行わずに Seeder を実行すると、画像が正しく表示されない場合があります。
+
+7. php artisan test
 
 
 ## メール認証（MailHog）設定
-1. Homebrew でインストール（まだインストールされていない場合）：brew install mailhog
-2. MailHog を起動：mailhog
+本アプリでは MailHog コンテナを使用しています。
+Docker起動時に自動で立ち上がるため、ローカルへのインストールは不要です。
+
+以下のURLでメールを確認できます：
+http://localhost:8025/
 
 
 ## PHPunitを用いたテスト手順
@@ -52,7 +69,7 @@ mkdir -p storage/app/public/profiles
 2. mysql -u root -p
 3. CREATE DATABASE demo_test;
 4. SHOW DATABASES;
-5. cp .env .env.testingに下記作成
+5. cp .env .env.testing を作成し、以下の内容に編集
 
 ```
 APP_ENV=testing
@@ -232,8 +249,12 @@ CVC	任意（例: 123）
 * 決済完了後、購入情報が purchases テーブルに保存される
 
 ## 注意事項
-1. 支払方法はstripeを使っているため、コンビニ支払では購入完了できないため、カード決済のみを購入完了としている。
-2. テストケースでもカード決済のみでテストを行っている。
-3. テストケースではユーザ登録後メール認証からプロフールに入るのでテストの流れが異なります。
-4. 自分の出品に関して、自分の出品にはいいねを押せない、表示しないとは書いてないが、規制ルールを設けて、自分の出品にはいいね押せない、マイリストにも表示しないこととした。
-5. 売り切れ商品に関して、売り切れた商品にコメントできない、いいね押せないとは書いてないが、規制ルールを設けて、コメントもいいねも押せないようにした。
+1. 支払方法はStripeを使用しているため、カード決済のみ購入完了となります。
+（コンビニ支払いには対応していません）
+2. テストケースでもカード決済のみでテストを行っています。
+3. テストケースではユーザ登録後メール認証からプロフィールに入るのでテストの流れが異なります。
+4. 自分の出品商品について
+   自分の出品には「いいね」できない仕様としています。
+   また、マイリストにも表示されないよう制御しています。
+5. 売り切れ商品について
+   売り切れ商品には、コメントおよび「いいね」ができない仕様としています。

@@ -51,7 +51,7 @@
                             </div>
                         @endif
 
-                        @if($item->purchase)
+                        @if($item->is_sold)
                             <div class="item-card__sold">
                                 Sold
                             </div>

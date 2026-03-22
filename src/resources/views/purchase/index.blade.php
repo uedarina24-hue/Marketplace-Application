@@ -18,7 +18,7 @@
         <div class="purchase__main">
 
             <div class="purchase__item">
-                @if($item->firstImage)
+                @if($item->firstImage && $item->firstImage->image_url)
                     <img src="{{ $item->firstImage->image_url }}"
                         class="purchase__item-image">
                 @else

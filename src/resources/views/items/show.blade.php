@@ -27,7 +27,7 @@
 
 
             {{-- SOLD --}}
-            @if($item->purchase)
+            @if($item->is_sold)
                 <div class="item-detail__sold">
                     SOLD
                 </div>

@@ -23,7 +23,7 @@
 
             <div class="profile__image-preview" id="imagePreview">
 
-                @if($user->profile_image)
+                @if($user->profile_image_url)
                     <img
                         src="{{ $user->profile_image_url }}"
                         class="profile__image"

@@ -80,11 +80,13 @@ class User extends Authenticatable implements MustVerifyEmail
             return null;
         }
 
-        if (str_starts_with($this->profile_image, 'images/')) {
-            return asset($this->profile_image);
+        // storage優先
+        if (Storage::disk('public')->exists($this->profile_image)) {
+            return Storage::url($this->profile_image);
         }
 
-        return Storage::url($this->profile_image);
+        // 保険（public/images）
+        return asset('images/' . basename($this->profile_image));
     }
 
 }

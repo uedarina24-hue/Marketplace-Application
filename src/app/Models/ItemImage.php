@@ -48,9 +48,20 @@ class ItemImage extends Model
     */
     public function getImageUrlAttribute()
     {
+        if (!$this->image_path) {
+            return null;
+        }
+
+        // storageに存在するなら最優先
+        if (Storage::disk('public')->exists($this->image_path)) {
+            return Storage::url($this->image_path);
+        }
+
+        // 保険：public/images
         if (str_starts_with($this->image_path, 'images/')) {
             return asset($this->image_path);
         }
-        return Storage::url($this->image_path);
+
+        return null;
     }
 }
