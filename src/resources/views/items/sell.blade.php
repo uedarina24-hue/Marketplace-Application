@@ -147,6 +147,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const previewImg = document.getElementById('preview-img');
     const preview = document.getElementById('image-preview');
     const hiddenInput = document.getElementById('existing-image-input');
+    const imageButton = document.querySelector('.sell__image-button');
 
 
     fileInput.addEventListener('change', function(e) {
@@ -157,6 +158,7 @@ document.addEventListener('DOMContentLoaded', function () {
         previewImg.style.display = 'block';
 
         hiddenInput.value = '';
+        imageButton.style.display = 'none';
     });
 });
 </script>
