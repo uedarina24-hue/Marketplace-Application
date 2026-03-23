@@ -140,7 +140,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const preview = document.getElementById('imagePreview');
     const hiddenInput = document.getElementById('existing-image-input');
 
-    // 新規アップロード
     fileInput.addEventListener('change', function(e) {
         const file = e.target.files[0];
         if (!file) return;
@@ -152,11 +151,9 @@ document.addEventListener('DOMContentLoaded', function () {
         preview.innerHTML = '';
         preview.appendChild(img);
 
-        // 既存画像選択解除
         hiddenInput.value = '';
     });
 
-    // 既存画像クリック
     document.querySelectorAll('.profile__existing-image').forEach(img => {
         img.addEventListener('click', function() {
             const path = img.dataset.path;
@@ -170,7 +167,6 @@ document.addEventListener('DOMContentLoaded', function () {
             preview.innerHTML = '';
             preview.appendChild(previewImg);
 
-            // 新規アップロード解除
             fileInput.value = '';
         });
     });

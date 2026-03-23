@@ -18,7 +18,7 @@ class ProfileEditTest extends TestCase
 
         $user = User::factory()->create([
             'name' => 'テストユーザー',
-            'profile_image' => 'profiles/dummy_profile.jpg',
+            'profile_image' => 'profiles/test.png',
             'postal_code' => '123-4567',
             'address' => '東京都渋谷区',
             'building_name' => 'テストビル101',
@@ -34,7 +34,6 @@ class ProfileEditTest extends TestCase
         $response->assertSee('value="123-4567"', false);
         $response->assertSee('value="東京都渋谷区"', false);
         $response->assertSee('value="テストビル101"', false);
-
-        $response->assertSee('profiles/dummy_profile.jpg');
+        $response->assertSee($user->profile_image_url, false);
     }
 }
