@@ -5,7 +5,6 @@
 @endsection
 
 @section('content')
-
 <div class="sell">
     <h1 class="sell__title">{{ isset($item) ? '商品の編集' : '商品の出品' }}</h1>
 
@@ -25,21 +24,19 @@
             <label class="sell__label">商品画像</label>
 
             <input type="hidden" name="existing_image" id="existing-image-input"
-                value="{{ isset($item) ? $item->image : '' }}">
+                value="{{ old('existing_image', $item->image ?? '') }}">
 
-            <div id="image-preview" class="sell__image-preview"
-                style="height:300px; border:1px dashed #ccc; display:flex; align-items:center; justify-content:center;">
-
-                @if(isset($item) && $item->image)
+            <div id="image-preview" class="sell__image-preview">
+                @if($item?->image)
                     <img id="preview-img" class="sell__preview-img"
-                        src="{{ asset('storage/' . $item->image) }}"
-                        style="object-fit:contain; width:100%; height:100%;">
+                        src="{{ asset('storage/' . $item->image) }}">
                 @else
                     <img id="preview-img" class="sell__preview-img" style="display:none;">
                 @endif
+
+                <label for="image" class="sell__image-button" >画像を選択する</label>
             </div>
 
-            <label for="image" class="sell__image-button" style="margin-top:10px;">画像を選択する</label>
             <input type="file" name="image" id="image" class="sell__image-input" accept="image/jpeg,image/png">
 
             @error('image')
@@ -96,7 +93,7 @@
             <div class="sell__form-group">
                 <label for="name" class="sell__label">商品名</label>
                 <input type="text" name="name" class="sell__input"
-                    value="{{ isset($item) ? $item->name : old('name') }}">
+                    value="{{ old('name', $item->name ?? '') }}">
                 @error('name')
                     <p class="sell__error">{{ $message }}</p>
                 @enderror
@@ -105,12 +102,12 @@
             <div class="sell__form-group">
                 <label for="brand_name" class="sell__label">ブランド名</label>
                 <input type="text" name="brand_name" class="sell__input"
-                    value="{{ isset($item) ? $item->brand_name : old('brand_name') }}">
+                    value="{{ old('brand_name', $item->brand_name ?? '') }}">
             </div>
 
             <div class="sell__form-group">
                 <label for="description" class="sell__label">商品の説明</label>
-                <textarea name="description" class="sell__textarea">{{ isset($item) ? $item->description : old('description') }}</textarea>
+                <textarea name="description" class="sell__textarea">{{ old('description', $item->description ?? '') }}</textarea>
                 @error('description')
                     <p class="sell__error">{{ $message }}</p>
                 @enderror
@@ -121,7 +118,7 @@
                 <div class="sell__price">
                     <span class="sell__price-symbol">¥</span>
                     <input type="text" name="price" class="sell__input sell__input--price"
-                        value="{{ isset($item) ? $item->price : old('price') }}">
+                        value="{{ old('price', $item->price ?? '') }}">
                 </div>
                 @error('price')
                     <p class="sell__error">{{ $message }}</p>
@@ -137,7 +134,6 @@
         </div>
     </form>
 </div>
-
 @endsection
 
 @section('js')
@@ -145,10 +141,8 @@
 document.addEventListener('DOMContentLoaded', function () {
     const fileInput = document.getElementById('image');
     const previewImg = document.getElementById('preview-img');
-    const preview = document.getElementById('image-preview');
     const hiddenInput = document.getElementById('existing-image-input');
     const imageButton = document.querySelector('.sell__image-button');
-
 
     fileInput.addEventListener('change', function(e) {
         const file = e.target.files[0];

@@ -74,9 +74,10 @@
 
         {{--  郵便番号 --}}
         <div class="profile__group">
-            <label class="profile__label">郵便番号</label>
+            <label for="postal_code" class="profile__label">郵便番号</label>
 
             <input
+                id="postal_code"
                 type="text"
                 name="postal_code"
                 value="{{ old('postal_code', $user->postal_code) }}"
@@ -90,9 +91,10 @@
 
         {{--  住所 --}}
         <div class="profile__group">
-            <label class="profile__label">住所</label>
+            <label for="address" class="profile__label">住所</label>
 
             <input
+                id="address"
                 type="text"
                 name="address"
                 value="{{ old('address', $user->address) }}"
@@ -106,9 +108,10 @@
 
         {{--  建物名 --}}
         <div class="profile__group">
-            <label class="profile__label">建物名</label>
+            <label for="building_name" class="profile__label">建物名</label>
 
             <input
+                id="building_name"
                 type="text"
                 name="building_name"
                 value="{{ old('building_name', $user->building_name) }}"

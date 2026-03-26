@@ -38,7 +38,9 @@ class MarketplaceController extends Controller
 
         } else {
 
-            $items = $query->excludeOwn(Auth::id())->get();
+            $items = $query
+                ->when(Auth::check(), fn($q) => $q->excludeOwn(Auth::id()))
+                ->get();
         }
 
         return view('items.index', [
@@ -70,6 +72,7 @@ class MarketplaceController extends Controller
     //いいね切り替え
     public function toggleLike(Item $item)
     {
+
         if ($item->user_id === Auth::id()) {
             return back();
         }
@@ -82,6 +85,7 @@ class MarketplaceController extends Controller
     //コメント投稿
     public function commentStore(CommentRequest $request, Item $item)
     {
+
         $item->comments()->create([
             'user_id' => auth()->id(),
             'content' => $request->validated()['content']
@@ -106,20 +110,24 @@ class MarketplaceController extends Controller
     {
         $user = Auth::user();
 
+
+        if (!$user->postal_code || !$user->address) {
+            return redirect()
+                ->route('purchase.address.edit', $item)
+                ->with('error','配送先を登録してください');
+        }
+
         if (!$item->isPurchasableBy($user)) {
-
-            if (!$user->postal_code || !$user->address) {
-                return redirect()
-                    ->route('purchase.address.edit', $item)
-                    ->with('error','配送先を登録してください');
-            }
-
             return redirect()->route('items.index');
         }
 
-        return redirect()->route('payment.checkout',[
-            'item'=>$item,
-            'payment_method'=>$request->payment_method
+        $request->validate([
+            'payment_method' => 'required'
+        ]);
+
+        return redirect()->route('payment.checkout', [
+            'item' => $item->id,
+            'payment_method' => $request->payment_method
         ]);
     }
 
@@ -211,7 +219,8 @@ class MarketplaceController extends Controller
     {
         $categories = Category::all();
         $images = [];
-        return view('items.sell', compact('categories', 'images'));
+        $item = null;
+        return view('items.sell', compact('categories', 'images', 'item'));
     }
 
 

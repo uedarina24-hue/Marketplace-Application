@@ -132,11 +132,7 @@ class Item extends Model
     //商品購入
     public function isPurchasableBy($user)
     {
-        if($this->purchase){
-            return false;
-        }
-
-        if(!$user->postal_code || !$user->address){
+        if ($this->purchase) {
             return false;
         }
 

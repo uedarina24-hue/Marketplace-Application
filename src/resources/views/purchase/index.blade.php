@@ -8,19 +8,14 @@
 <div class="purchase">
     <div class="purchase__container">
 
-    @if(session('error'))
-        <div class="text-red-500 mb-4">
-            {{ session('error') }}
-        </div>
-    @endif
-
-        {{-- 左カラム --}}
+        {{-- 購入商品情報 --}}
         <div class="purchase__main">
 
             <div class="purchase__item">
-                @if($item->firstImage && $item->firstImage->image_url)
+                @if($item->firstImage?->image_url)
                     <img src="{{ $item->firstImage->image_url }}"
-                        class="purchase__item-image">
+                        class="purchase__item-image"
+                        alt="{{ $item->name }}">
                 @else
                     <div class="purchase__item-image">商品画像</div>
                 @endif
@@ -74,12 +69,17 @@
                         {{ $user->address }}<br>
                         {{ $user->building_name }}
                     </p>
+
+                    {{-- 住所情報を hidden input として送信 --}}
+                    <input type="hidden" name="postal_code" value="{{ $user->postal_code }}">
+                    <input type="hidden" name="address" value="{{ $user->address }}">
+                    <input type="hidden" name="building_name" value="{{ $user->building_name }}">
                 </div>
             </form>
 
         </div>
 
-        {{-- 右カラム --}}
+        {{-- 商品小計 --}}
         <div class="purchase__sidebar">
 
             <div class="purchase__summary">
@@ -109,7 +109,5 @@ methodLabel.innerText = paymentSelect.options[paymentSelect.selectedIndex].text;
 paymentSelect.addEventListener('change', function() {
     methodLabel.innerText = this.options[this.selectedIndex].text;
 });
-
 </script>
-
 @endsection

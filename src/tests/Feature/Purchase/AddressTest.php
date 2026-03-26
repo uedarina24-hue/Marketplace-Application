@@ -13,7 +13,7 @@ class AddressTest extends TestCase
     use DatabaseMigrations;
 
     /** @test
-     * 送付先住所変更画面にて登録した住所が商品購入画面に反映されていることを確認する
+     * 送付先住所変更画面で登録した住所が商品購入画面に反映される
      */
     public function user_can_update_shipping_address()
     {
@@ -42,7 +42,7 @@ class AddressTest extends TestCase
     }
 
     /** @test
-     * 購入した商品に送付先住所が紐づいて登録されることを確認する
+     * 購入した商品に送付先住所が紐づく
      */
     public function purchased_item_is_linked_to_updated_address()
     {
@@ -54,13 +54,24 @@ class AddressTest extends TestCase
 
         $item = Item::factory()->create();
 
-        session(['payment_method' => 'card']);
+        $this->actingAs($user);
 
-        $this->actingAs($user)
-            ->get(route('payment.success', ['item' => $item->id]));
+        $this->post(route('purchase.store', $item), [
+            'payment_method' => 'card',
+            'postal_code' => $user->postal_code,
+            'address' => $user->address,
+            'building_name' => $user->building_name,
+        ]);
+
+        $this->withSession(['payment_method' => 'card'])
+            ->get(route('payment.success', [
+                'item' => $item->id,
+                'payment_method' => 'card'
+            ]));
 
         $purchase = Purchase::first();
 
+        $this->assertNotNull($purchase, '購入データが作成されていません');
         $this->assertEquals($user->postal_code, $purchase->postal_code);
         $this->assertEquals($user->address, $purchase->address);
         $this->assertEquals($user->building_name, $purchase->building_name);

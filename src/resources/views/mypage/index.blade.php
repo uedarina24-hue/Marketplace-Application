@@ -11,6 +11,8 @@
     {{-- プロフィール --}}
     <div class="mypage__profile">
 
+        <h1 class="visually-hidden">マイページ</h1>
+
         <div class="mypage__profile-left">
 
             @if($user->profile_image_url)

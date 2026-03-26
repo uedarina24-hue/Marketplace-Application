@@ -29,8 +29,7 @@
 
     {{-- 商品一覧 --}}
     <ul class="items__grid">
-        @forelse ($items as $item)
-            @php($image = $item->firstImage)
+        @forelse($items as $item)
 
             <li class="item-card">
                 <a
@@ -39,9 +38,9 @@
                 >
                     <div class="item-card__image-wrapper">
 
-                        @if ($image)
+                        @if($item->firstImage?->image_url)
                             <img
-                                src="{{ $image->image_url }}"
+                                src="{{ $item->firstImage->image_url }}"
                                 class="item-card__image"
                                 alt="{{ $item->name }}"
                             >
@@ -52,9 +51,9 @@
                         @endif
 
                         @if($item->is_sold)
-                            <div class="item-card__sold">
+                            <span class="item-card__sold">
                                 Sold
-                            </div>
+                            </span>
                         @endif
 
                     </div>

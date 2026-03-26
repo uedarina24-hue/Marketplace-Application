@@ -15,20 +15,34 @@ class PurchaseTest extends TestCase
     /** @test
      * 「購入する」ボタンを押下すると購入が完了する
      */
-    public function user_can_complete_purchase()
+    public function test_user_can_complete_purchase_simple()
     {
         $user = User::factory()->create([
-            'postal_code' => '123-4567',
-            'address' => '東京都新宿区',
-            'building_name' => 'ビルA',
+            'postal_code' => '150-0001',
+            'address' => '東京都渋谷区神宮前1-1',
         ]);
-
         $item = Item::factory()->create();
 
-        session(['payment_method' => 'card']);
+        $this->actingAs($user);
 
-        $this->actingAs($user)
-            ->get(route('payment.success', ['item' => $item->id]))
+        $response = $this->post(route('purchase.store', $item), [
+            'payment_method' => 'card',
+            'postal_code' => $user->postal_code,
+            'address' => $user->address,
+            'building_name' => null,
+        ]);
+
+        $response->assertRedirect();
+        $this->assertStringContainsString(
+            route('payment.checkout', ['item' => $item->id]),
+            $response->headers->get('Location')
+        );
+
+        $this->withSession(['payment_method' => 'card'])
+            ->get(route('payment.success', [
+                'item' => $item->id,
+                'payment_method' => 'card'
+            ]))
             ->assertRedirect(route('items.index'));
 
         $this->assertDatabaseHas('purchases', [

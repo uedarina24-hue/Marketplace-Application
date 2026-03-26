@@ -13,7 +13,7 @@
         {{-- 商品画像 --}}
         <div class="item-detail__image-area">
 
-            @if($item->firstImage)
+            @if($item->firstImage?->image_url)
                 <img
                     src="{{ $item->firstImage->image_url }}"
                     class="item-detail__image"
@@ -28,9 +28,9 @@
 
             {{-- SOLD --}}
             @if($item->is_sold)
-                <div class="item-detail__sold">
+                <span class="item-detail__sold">
                     SOLD
-                </div>
+                </span>
             @endif
 
         </div>
@@ -289,7 +289,7 @@
                             placeholder="ログイン後にコメントできます"
                             readonly
                         @endguest
-                    >{{ old('content') }}</textarea>
+                        >{{ old('content') }}</textarea>
 
                     @error('content')
                     <p class="item-detail__error">

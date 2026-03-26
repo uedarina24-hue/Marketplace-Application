@@ -1,30 +1,22 @@
-/*
-=====================================
+/* ========================================
 共通設定（重要：幅ズレ防止）
-=====================================
-*/
+======================================== */
 *,
 *::before,
 *::after {
     box-sizing: border-box;
 }
 
-
 /* ========================================
 商品出品画面 全体
 ======================================== */
-
 .sell {
     max-width: 700px;
     margin: 0 auto;
     padding: 40px 60px;
 }
 
-
-/* ========================================
-タイトル
-======================================== */
-
+/* タイトル */
 .sell__title {
     text-align: center;
     font-size: 26px;
@@ -32,11 +24,7 @@
     margin-bottom: 40px;
 }
 
-
-/* ========================================
-セクション
-======================================== */
-
+/* セクション */
 .sell__section {
     margin-bottom: 40px;
 }
@@ -50,11 +38,7 @@
     margin-bottom: 20px;
 }
 
-
-/* ========================================
-ラベル
-======================================== */
-
+/* ラベル */
 .sell__label {
     display: block;
     font-weight: bold;
@@ -62,17 +46,23 @@
     margin-bottom: 10px;
 }
 
-
-/* ========================================
-画像アップロード
-======================================== */
-
-.sell__image-upload {
-    border: 1px dashed #ccc;
+/* 画像アップロード */
+.sell__image-preview {
     width: 100%;
     height: 300px;
+    border: 1px dashed #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff;
     position: relative;
-    background: #fff;
+}
+
+.sell__preview-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
 }
 
 .sell__image-input {
@@ -80,11 +70,7 @@
 }
 
 .sell__image-button {
-    position: absolute;
-    top: 50%;
-    left: 50%;
     padding: 5px 12px;
-    transform: translate(-50%, -50%);
     border: 1px solid #ff6b6b;
     color: #ff6b6b;
     border-radius: 4px;
@@ -94,34 +80,15 @@
 
 .sell__image-button:hover {
     background-color: #ff6b6b;
-    color: white;
+    color: #fff;
 }
 
-.sell__image-preview {
-    width: 100%;
-    height: 100%;
-}
-
-.sell__preview-img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-}
-
-
-/* ========================================
-フォームグループ
-======================================== */
-
+/* フォームグループ */
 .sell__form-group {
     margin-bottom: 24px;
 }
 
-
-/* ========================================
-input
-======================================== */
-
+/* input, textarea */
 .sell__input {
     width: 100%;
     height: 42px;
@@ -139,25 +106,17 @@ input
     resize: vertical;
 }
 
-
-/* ========================================
-select
-======================================== */
-
+/* select */
 .sell__select {
     width: 100%;
     height: 42px;
     border: 1px solid #ccc;
     padding: 8px;
     font-size: 14px;
-    background-color: white;
+    background-color: #fff;
 }
 
-
-/* ========================================
-カテゴリ
-======================================== */
-
+/* カテゴリ */
 .sell__categories {
     display: flex;
     flex-wrap: wrap;
@@ -178,18 +137,12 @@ select
     cursor: pointer;
 }
 
-/* 選択時 */
-
 .sell__category-input:checked+.sell__category-label {
     background-color: #ff6b6b;
-    color: white;
+    color: #fff;
 }
 
-
-/* ========================================
-価格
-======================================== */
-
+/* 価格 */
 .sell__price {
     position: relative;
 }
@@ -208,11 +161,7 @@ select
     padding-left: 28px;
 }
 
-
-/* ========================================
-出品ボタン
-======================================== */
-
+/* 出品ボタン */
 .sell__submit {
     margin-top: 40px;
 }
@@ -221,7 +170,7 @@ select
     width: 100%;
     height: 48px;
     background-color: #ff5a5a;
-    color: white;
+    color: #fff;
     font-size: 16px;
     border: none;
     cursor: pointer;
@@ -231,26 +180,16 @@ select
     opacity: 0.9;
 }
 
-
-/* ========================================
-エラー
-======================================== */
-
+/* エラー表示 */
 .sell__error {
     color: red;
     font-size: 13px;
     margin-top: 6px;
 }
 
-
-/* ========================================
-PC対応（1400px以上）
-======================================== */
-
+/* PC対応（1400px以上） */
 @media screen and (min-width: 1400px) {
-
     .sell {
         max-width: 800px;
     }
-
 }
