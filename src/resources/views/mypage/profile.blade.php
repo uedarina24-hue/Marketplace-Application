@@ -14,11 +14,10 @@
         class="profile__form"
         enctype="multipart/form-data"
     >
-
         @csrf
         @method('PUT')
 
-        {{--  画像 --}}
+        {{-- 画像 --}}
         <div class="profile__image-section">
 
             <div class="profile__image-preview" id="imagePreview">
@@ -47,15 +46,13 @@
                 style="display:none;"
             >
 
-            <input type="hidden" name="existing_profile_image" id="existing-image-input">
-
             @error('profile_image')
                 <p class="profile__error">{{ $message }}</p>
             @enderror
 
         </div>
 
-        {{--  名前 --}}
+        {{-- 名前 --}}
         <div class="profile__group">
             <label for="name" class="profile__label">ユーザー名</label>
 
@@ -72,7 +69,7 @@
             @enderror
         </div>
 
-        {{--  郵便番号 --}}
+        {{-- 郵便番号 --}}
         <div class="profile__group">
             <label for="postal_code" class="profile__label">郵便番号</label>
 
@@ -89,7 +86,7 @@
             @enderror
         </div>
 
-        {{--  住所 --}}
+        {{-- 住所 --}}
         <div class="profile__group">
             <label for="address" class="profile__label">住所</label>
 
@@ -106,7 +103,7 @@
             @enderror
         </div>
 
-        {{--  建物名 --}}
+        {{-- 建物名 --}}
         <div class="profile__group">
             <label for="building_name" class="profile__label">建物名</label>
 
@@ -123,7 +120,7 @@
             @enderror
         </div>
 
-        {{--  ボタン --}}
+        {{-- ボタン --}}
         <div class="profile__button-wrapper">
             <button type="submit" class="profile__button">
                 更新する
@@ -133,15 +130,12 @@
     </form>
 </div>
 
-
-{{--  画像プレビューJS --}}
+{{-- 画像プレビュー --}}
 <script>
-
 document.addEventListener('DOMContentLoaded', function () {
 
     const fileInput = document.getElementById('image');
     const preview = document.getElementById('imagePreview');
-    const hiddenInput = document.getElementById('existing-image-input');
 
     fileInput.addEventListener('change', function(e) {
         const file = e.target.files[0];
@@ -153,29 +147,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
         preview.innerHTML = '';
         preview.appendChild(img);
-
-        hiddenInput.value = '';
-    });
-
-    document.querySelectorAll('.profile__existing-image').forEach(img => {
-        img.addEventListener('click', function() {
-            const path = img.dataset.path;
-
-            hiddenInput.value = path;
-
-            const previewImg = document.createElement('img');
-            previewImg.src = '/storage/' + path;
-            previewImg.className = 'profile__image';
-
-            preview.innerHTML = '';
-            preview.appendChild(previewImg);
-
-            fileInput.value = '';
-        });
     });
 
 });
-
 </script>
 
 @endsection

@@ -72,9 +72,12 @@ class MarketplaceController extends Controller
     //いいね切り替え
     public function toggleLike(Item $item)
     {
+        if (!Auth::check()) {
+            abort(403);
+        }
 
         if ($item->user_id === Auth::id()) {
-            return back();
+            abort(403);
         }
 
         $item->likedUsers()->toggle(Auth::id());
@@ -85,9 +88,12 @@ class MarketplaceController extends Controller
     //コメント投稿
     public function commentStore(CommentRequest $request, Item $item)
     {
+        if (!Auth::check()) {
+            abort(403);
+        }
 
         $item->comments()->create([
-            'user_id' => auth()->id(),
+            'user_id' => Auth::id(),
             'content' => $request->validated()['content']
         ]);
 
@@ -110,6 +116,10 @@ class MarketplaceController extends Controller
     {
         $user = Auth::user();
 
+        if ($item->purchase) {
+            return redirect()->route('items.index');
+        }
+
 
         if (!$user->postal_code || !$user->address) {
             return redirect()
@@ -121,16 +131,13 @@ class MarketplaceController extends Controller
             return redirect()->route('items.index');
         }
 
-        $request->validate([
-            'payment_method' => 'required'
-        ]);
-
         return redirect()->route('payment.checkout', [
             'item' => $item->id,
             'payment_method' => $request->payment_method
         ]);
     }
 
+    //住所変更
     public function addressEdit(Item $item)
     {
         $user = Auth::user();
@@ -173,13 +180,7 @@ class MarketplaceController extends Controller
     public function edit()
     {
         $user = Auth::user();
-
-        $existingImages = [];
-        if ($user->profile_image) {
-            $existingImages[] = $user->profile_image;
-        }
-
-        return view('mypage.profile', compact('user', 'existingImages'));
+        return view('mypage.profile', compact('user'));
     }
 
     public function update(ProfileRequest $request)
@@ -198,10 +199,6 @@ class MarketplaceController extends Controller
 
             $data['profile_image'] = $request->file('profile_image')
                 ->store('profiles', 'public');
-
-        } elseif ($request->filled('existing_profile_image')) {
-
-            $data['profile_image'] = $request->input('existing_profile_image');
         }
 
         $user->update($data);
